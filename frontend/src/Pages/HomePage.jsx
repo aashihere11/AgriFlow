@@ -1,13 +1,18 @@
 import React from 'react';
+import Navbar from '../Components/Navbar';
+import MediaCard from '../Components/MediaCard';
+import HeroBanner from '../Components/Banner';
 
 
 function HomePage() {
-    return ( 
+    return (
         <>
-        <h1>welcome</h1>
+            <Navbar />
+            <HeroBanner/>
+             <MediaCard/>
 
         </>
-     );
+    );
 }
 
 export default HomePage;

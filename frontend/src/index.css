@@ -1,2 +1,28 @@
+.logo {
+    width: clamp(80px, 15vw, 200px);
+    height: auto;
+    margin-left: 5vw;
+    margin-top: -8vh;
+    
+}
 
 
+.search{
+    margin-top: -8vh;
+    
+}
+
+.media-card{
+    width:clamp(80px, 100vw, 200px); 
+    height: auto;
+}
+
+.profile{
+    margin-top: -10vw;
+}
+
+
+.font-size{
+    font-size: clamp(10px, 1vw, 20px);
+    padding: clamp(2px, 1vw, 4px); 
+}
