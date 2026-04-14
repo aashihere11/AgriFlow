@@ -9,53 +9,59 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from "@mui/icons-material/Menu";
+import { useNavigate } from 'react-router-dom';
 export default function TemporaryDrawer() {
     const [open, setOpen] = React.useState(false);
-
+    const navigate = useNavigate();
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
 
-    const icons = [
-        <a><i class="fa-solid fa-seedling"></i></a>,
-        <a ><i class="fa-solid fa-apple-whole"></i></a>,
-        <a><i class="fa-solid fa-wheat-awn"></i></a>,
-        <a><i class="fa-solid fa-mortar-pestle"></i></a>
+    const menuItems = [
+        { label: 'Vegetables', icon: <i className="fa-solid fa-seedling"></i>, path: '/vegetables' },
+        { label: 'Fruits', icon: <i className="fa-solid fa-apple-whole"></i>, path: '/fruits' },
+        { label: 'Grains', icon: <i className="fa-solid fa-wheat-awn"></i>, path: '/grains' },
+        { label: 'Spices', icon: <i className="fa-solid fa-mortar-pestle"></i>, path: '/spices' },
     ];
 
-     const icons1 = [
-        <a><i class="fa-solid fa-gear"></i></a>,
-        <a ><i class="fa-solid fa-file-shield"></i></a>,
-        <a><i class="fa-solid fa-arrow-right-from-bracket"></i></a>,
-        
+    const settingsItems = [
+        { label: 'Settings', icon: <i className="fa-solid fa-gear"></i>, path: '/settings' },
+        { label: 'Privacy', icon: <i className="fa-solid fa-file-shield"></i>, path: '/privacy' },
+        { label: 'Logout', icon: <i className="fa-solid fa-arrow-right-from-bracket"></i>, path: '/logout' },
     ];
+
+    const handleNavigate = (path) => {
+        navigate(path);
+        setOpen(false);
+    }
     const DrawerList = (
-        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} style={{backgroundColor:"rgba(168, 218, 141, 0.84)"}}>
+        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} style={{ backgroundColor: "rgba(168, 218, 141, 0.84)" }}>
             <List>
-                {['Vegetables', 'Fruits', 'Grains', 'Spices'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
+                {menuItems.map((item) => (
+                    <ListItem key={item.label} disablePadding>
+                        <ListItemButton onClick={() => handleNavigate(item.path)}>
                             <ListItemIcon>
-                               {icons[index]}
+                                {item.icon}
                             </ListItemIcon>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={item.label} />
                         </ListItemButton>
                     </ListItem>
                 ))}
             </List>
             <Divider />
             <List>
-                {['Settings', 'Privacy', 'Logout'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
+                {settingsItems.map((item) => (
+                    <ListItem key={item.label} disablePadding>
+                        <ListItemButton onClick={() => handleNavigate(item.path)}>
                             <ListItemIcon>
-                                {icons1[index]}
+                                {item.icon}
                             </ListItemIcon>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={item.label} />
                         </ListItemButton>
                     </ListItem>
                 ))}
             </List>
+            <img src="/media/veggie1.png" alt="" />
         </Box>
     );
 
