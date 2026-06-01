@@ -1,4 +1,7 @@
-@import "tailwindcss";
+.body {
+    background-color: #5c6e41;
+}
+
 .logo {
     width: clamp(80px, 15vw, 200px);
     height: auto;
