@@ -2,6 +2,16 @@
     background-color: #5c6e41;
 }
 
+
+a {
+  color: inherit;
+  text-decoration: none;
+  }
+
+  a:hover{
+    color: #044a19;
+  }
+
 .logo {
     width: clamp(80px, 15vw, 200px);
     height: auto;
