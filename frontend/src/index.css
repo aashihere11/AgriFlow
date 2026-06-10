@@ -20,6 +20,27 @@ a {
     
 }
 
+.trend-up {
+  color: #2e8a48;
+}
+
+.trend-warning {
+  color: #e67e22;
+}
+
+.trend-down {
+  color: #e74c3c;
+}
+
+.trend-neutral {
+  color: #6b7280;
+}
+
+/* index.css */
+.stock-good { color: #2e8a48; }  /* green — achha stock */
+.stock-low  { color: #e67e22; }  /* orange — kam stock */
+.stock-out  { color: #e74c3c; }  /* red — khatam */
+
 
 .search{
     margin-top: -8vh;
@@ -45,3 +66,30 @@ a {
   border: 5px solid #044a19;
   border-radius: 10px;
 }
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.1rem;
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* index.css */
+.dot-Fresh   { background: #2e8a48; }
+.dot-Update { background: #e67e22; }
+.dot-Expired { background: #e74c3c;}
+
+.text-fresh   { color: #2e8a48; }
+.text-Update { color: #e67e22; }
+.text-Expired { color: #e74c3c; }
+
+

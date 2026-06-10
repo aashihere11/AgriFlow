@@ -21,14 +21,20 @@ export default function TemporaryDrawer() {
         { label: 'Vegetables', icon: <i className="fa-solid fa-seedling"></i>, path: '/vegetables' },
         { label: 'Fruits', icon: <i className="fa-solid fa-apple-whole"></i>, path: '/fruits' },
         { label: 'Grains', icon: <i className="fa-solid fa-wheat-awn"></i>, path: '/grains' },
-        { label: 'Spices', icon: <i className="fa-solid fa-mortar-pestle"></i>, path: '/spices' },
+        { label: 'Herbs & Spices', icon: <i className="fa-solid fa-mortar-pestle"></i>, path: '/spices' },
+        { label: 'dairy', icon: <i className="fa-solid fa-mortar-pestle"></i>, path: '/spices' },
+        { label: 'Honey & Natural', icon: <i className="fa-solid fa-mortar-pestle"></i>, path: '/spices' }
     ];
 
-    const settingsItems = [
-        { label: 'Settings', icon: <i className="fa-solid fa-gear"></i>, path: '/settings' },
-        { label: 'Privacy', icon: <i className="fa-solid fa-file-shield"></i>, path: '/privacy' },
-        { label: 'Logout', icon: <i className="fa-solid fa-arrow-right-from-bracket"></i>, path: '/logout' },
-    ];
+   const navItems = [
+  { path: "/farmer/dashboard",  label: "Dashboard" },
+  { path: "/farmer/products", label: "My Products" },
+  { path: "/farmer/orders", label: "Orders" },
+  { path: "/farmer/earnings", label: "Earnings" },
+  { path: "/farmer/profile", label: "Profile" },
+  { path: "/farmer/settings", label: "Settings" },
+  { path: "/farmer/login", label: "Logout" }
+];
 
     const handleNavigate = (path) => {
         navigate(path);
@@ -50,7 +56,7 @@ export default function TemporaryDrawer() {
             </List>
             <Divider />
             <List>
-                {settingsItems.map((item) => (
+                {navItems.map((item) => (
                     <ListItem key={item.label} disablePadding>
                         <ListItemButton onClick={() => handleNavigate(item.path)}>
                             <ListItemIcon>
