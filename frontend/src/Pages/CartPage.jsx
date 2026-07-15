@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 function CartPage() {
+    const navigate = useNavigate();
     const [qty, setQty] = useState(1);
     const [total, setTotal] = useState(190)
     return (
         <>
-      
+
 
             <div className=" flex justify-between items-center sticky h-24 border border-gray-200  ">
                 <a href="" className="w-xl ">
@@ -13,8 +14,8 @@ function CartPage() {
                 </a>
                 <div className=" flex items-center gap-x-8  justify-stretch mr-8">
                     <a href="#" className="text-gray-400">Shop</a>
-                    <a href="#"  className="">Farmers</a>
-                    <a href="#"  className="">About</a>
+                    <a href="#" className="">Farmers</a>
+                    <a href="#" className="">About</a>
                     <span className="rounded-3xl border-1 border-green-200 bg-green-50 border-solid text-sm font-medium px-4 py-2">🛒 Cart· 4</span>
                 </div>
             </div>
@@ -24,9 +25,9 @@ function CartPage() {
                 <div className="flex items-center justify-between border-1 bg-green-50 border-green-200 rounded-xl">
                     {/* <div className="rounded text-center flex items-center justify-center bg-green-50 border-green-200">  <i class="fa-regular fa-truck"></i> </div> */}
                     <p className="px-4 mt-2"> 🚚Free delivery on orders above ₹499 — you're almost there!</p>
-                    
+
                 </div>
-                
+
             </div>
 
             <div className=" page grid grid-cols-2 gap-4  m-10 justify-center items-start ">
@@ -91,20 +92,23 @@ function CartPage() {
                         </div>
                     </div>
                     <div className="flex flex-col items-center mt-2">
-                    <div className="text-md rounded-md text-center bg-[#f5ecd7] border-1 border-[#d4b55a] py-3 px-1 font-medium">
-                        🌿 You're saving ₹<span id="savings">180</span> vs supermarket prices
-                    </div>
+                        <div className="text-md rounded-md text-center bg-[#f5ecd7] border-1 border-[#d4b55a] py-3 px-1 font-medium">
+                            🌿 You're saving ₹<span id="savings">180</span> vs supermarket prices
+                        </div>
 
-                    <button className="checkout-btn text-sm font-serif text-center font-medium 
-                        bg-[#2e8a48] rounded-md text-[#fff] mt-4 px-2 py-3 border-1 hover:bg-[#1a5c2e]" >
-                        Proceed to Checkout →
-                    </button>
-                    <a href="#" className="continue-btn no-underline text-sm font-serif text-center font-medium rounded-md  mt-4 px-2 py-3 border-1 border-[#5cba78] text-[#2e8a48]">Continue Shopping</a>
+                        <button className="checkout-btn text-sm font-serif text-center font-medium 
+                        bg-[#2e8a48] rounded-md text-[#fff] mt-4 px-2 py-3 border-1 hover:bg-[#1a5c2e]"
+                            onClick={() => navigate("/checkoutpage")} >
+                            Proceed to Checkout →
+                        </button>
+                        <a href="#" className="continue-btn no-underline text-sm font-serif text-center font-medium rounded-md 
+                     mt-4 px-2 py-3 border-1 border-[#5cba78] text-[#2e8a48]"
+                            onClick={() => navigate("/homepage")}>Continue Shopping</a>
                     </div>
 
                 </div>
             </div>
-            
+
         </>
     );
 }

@@ -7,16 +7,18 @@ import VegetablePage from './Pages/Vegetables.jsx';
 import ProductPage from './Pages/ProductPage.jsx';
 import CartPage from './Pages/CartPage.jsx';
 import DashboardPage from './Pages/DashboardPage.jsx';
+import CheckoutPage from './Pages/CheckoutPage.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
   <Routes>
-   <Route path="/HomePage" element={<HomePage />} />
+   <Route path="/homepage" element={<HomePage />} />
     <Route path="/" element={<LoginPage />} />
     <Route path="/Vegetables" element={<VegetablePage />}/>
     <Route path="/Product" element={<ProductPage/>} />
      <Route path="/cart" element={<CartPage/>} />
       <Route path="/dashboard" element={<DashboardPage/>} />
+      <Route path="/Checkoutpage" element={<CheckoutPage/>} />
    </Routes>
   </BrowserRouter>,
 )
