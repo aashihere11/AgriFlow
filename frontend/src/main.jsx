@@ -8,6 +8,7 @@ import ProductPage from './Pages/ProductPage.jsx';
 import CartPage from './Pages/CartPage.jsx';
 import DashboardPage from './Pages/DashboardPage.jsx';
 import CheckoutPage from './Pages/CheckoutPage.jsx';
+import ConfirmationPage from './Pages/ConfirmationPage.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')).render(
      <Route path="/cart" element={<CartPage/>} />
       <Route path="/dashboard" element={<DashboardPage/>} />
       <Route path="/Checkoutpage" element={<CheckoutPage/>} />
+      <Route path="/confirmationpage" element={<ConfirmationPage/>} />
    </Routes>
   </BrowserRouter>,
 )

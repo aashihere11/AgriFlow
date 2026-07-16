@@ -1,6 +1,7 @@
 import { orderItems } from "../../data/checkoutpage";
-
+import { useNavigate } from "react-router-dom";
 function OrderSummary() {
+  const navigate = useNavigate();
   const subtotal = orderItems.reduce((sum, item) => sum + item.price, 0);
   const savings = Math.round(subtotal * 0.33);
   return (
@@ -44,11 +45,11 @@ function OrderSummary() {
         <button
 
           className="w-full py-3 bg-[#2e8a48] hover:bg-[#1a5c2e] text-white text-base font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
-        >
-          🔒 Pay ₹ securely
+          onClick={() => navigate("/confirmationpage")}>
+          🔒 Pay₹{subtotal} securely
         </button>
 
-        <p className="text-center text-base text-gray-400 mt-2 m-0">
+        <p className="text-center text-base text-gray-400 mt-2 m-0" >
           🛡️ Powered by <span className="font-medium text-gray-500">Razorpay</span>
         </p>
       </div>
