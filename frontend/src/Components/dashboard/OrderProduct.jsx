@@ -1,14 +1,15 @@
 import React from 'react';
 import { products } from "../../data/farmerDashboardData";
 import { orders } from "../../data/farmerDashboardData";
+import { useNavigate } from 'react-router-dom';
 function OrderProduct() {
-
+    const navigate = useNavigate();
     const getStockColor = (stock) => {
-    if (stock == 0) return "stock-out";
-    if (stock <= 5) return "stock-low";
-    return "stock-good";
+        if (stock == 0) return "stock-out";
+        if (stock <= 5) return "stock-low";
+        return "stock-good";
 
-  }
+    }
     return (
         <>
             {/* SECTION 2 — ORDERS + PRODUCTS */}
@@ -62,7 +63,8 @@ function OrderProduct() {
 
                     ))}
                     <button className='flex items-center justify-center text-sm  py-3 font-medium text-[#2e8a48] bg-[#f0faf2]
-                  border-1 border-[#a8e0b5] shadow-md pointer rounded-md font-serif w-full' style={{borderRadius:"10px"}}>➕ Add new product</button>
+                  border-1 border-[#a8e0b5] shadow-md pointer rounded-md font-serif w-full' style={{ borderRadius: "10px" }}
+                        onClick={() => navigate("/myproducts")}>➕ Add new product</button>
                 </div>
             </div>
 

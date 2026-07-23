@@ -46,6 +46,7 @@ function DashboardPage() {
       {/* tabs- Earning + Frehness + Actions */}
       <TabSwitcher />
 
+
     </div>
   </>);
 }

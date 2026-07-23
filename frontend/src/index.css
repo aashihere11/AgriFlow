@@ -11,6 +11,7 @@ a {
   a:hover{
     color: #044a19;
   }
+  
 
 .logo {
     width: clamp(80px, 15vw, 200px);
@@ -104,6 +105,18 @@ a {
     transform: translateY(15px);
   }
   to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
     opacity: 1;
     transform: translateY(0);
   }

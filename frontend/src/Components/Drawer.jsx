@@ -26,15 +26,15 @@ export default function TemporaryDrawer() {
         { label: 'Honey & Natural', icon: <i className="fa-solid fa-mortar-pestle"></i>, path: '/spices' }
     ];
 
-   const navItems = [
-  { path: "/farmer/dashboard",  label: "Dashboard" },
-  { path: "/farmer/products", label: "My Products" },
-  { path: "/farmer/orders", label: "Orders" },
-  { path: "/farmer/earnings", label: "Earnings" },
-  { path: "/farmer/profile", label: "Profile" },
-  { path: "/farmer/settings", label: "Settings" },
-  { path: "/farmer/login", label: "Logout" }
-];
+    const navItems = [
+        { path: "/dashboard", label: "Dashboard" },
+        { path: "/myproducts", label: "My Products" },
+        { path: "/farmer/orders", label: "Orders" },
+        { path: "/farmer/earnings", label: "Earnings" },
+        { path: "/farmer/profile", label: "Profile" },
+        { path: "/farmer/settings", label: "Settings" },
+        { path: "/", label: "Logout" }
+    ];
 
     const handleNavigate = (path) => {
         navigate(path);

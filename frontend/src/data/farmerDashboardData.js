@@ -38,9 +38,8 @@ export const freshness = [
 ];
 
 export const quickActions = [
-  { icon: "➕", label: "Add new product" },
-  { icon: "🔄", label: "Update stock" },
-  { icon: "🚚", label: "Mark order dispatched" },
-  { icon: "📷", label: "Upload fresh photo" },
-  { icon: "📊", label: "View full earnings" },
+  { icon: "➕", label: "Add new product", path: "/myproducts" },
+  { icon: "🔄", label: "Update product", path: "/myproducts" },
+  { icon: "🚚", label: "Mark order dispatched", path: "/orders" },
+  { icon: "📊", label: "View full earnings", path: "/earnings" },
 ];
