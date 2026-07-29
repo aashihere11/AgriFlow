@@ -145,3 +145,31 @@ a {
 .success-btns {
   animation: fadeUp 0.4s ease 1.3s both;
 }
+
+
+/* badges */
+
+.Pending {
+  background: #fff8e1;
+  color: #b8860b;
+  border: 0.5px solid #d4b55a;
+}
+ 
+.Packed {
+  background: #e8f4fd;
+  color: #1a6fa8;
+  border: 0.5px solid #90caf9;
+}
+ 
+.Out-For-Delivery {
+  background: #f3e8fd;
+  color: #7b3fa8;
+  border: 0.5px solid #ce93d8;
+}
+ 
+.Delivered {
+  background: #f0faf2;
+  color: #2e8a48;
+  border: 0.5px solid #a8e0b5;
+}
+ 

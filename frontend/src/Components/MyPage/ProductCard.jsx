@@ -36,7 +36,7 @@ function ProductCard({ key, product, setMode, setSelectedProduct, setIsModalOpen
 
   return (<>
     <div className='bg-white border-2 border-gray-200 rounded-xl overflow-hidden '>
-      <div className='h-30 flex items-center justify-center relative overflow-hidden ' >
+      <div className='h-30 flex items-center text-5xl justify-center relative overflow-hidden ' >
         {product.emoji}
         <span className={`absolute top-2 left-2 text-[10px] font-medium px-2 py-1 rounded-full bg-white ${freshness.class} `}>
           {freshness.label == "fresh" ? "🟢" : freshness.label == "warning" ? "🟠" : "🔴"} {freshness.label}</span>
