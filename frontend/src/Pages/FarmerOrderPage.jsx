@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { orders } from '../data/Ordersdata';
 import OrderCard from '../Components/FarmerOrderPage/OrderCard';
 import TemporaryDrawer from '../Components/Drawer';
+import Tab from '../Components/Tab';
 
 
 const tabs = ["All", "Pending", "Packed", "Out-For-Delivery", "Delivered"];
+
 function FarmerOrderPage() {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("All");
@@ -49,18 +51,14 @@ function FarmerOrderPage() {
 
       {/* TABS */}
       <div className="flex gap-5 mb-5 flex-wrap items-center">
-        {tabs.map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-1.5 text-xs font-medium border transition-all
-              ${activeTab === tab
-                ? "bg-[#2e8a48] text-white border-[#2e8a48]"
-                : "bg-white text-gray-500 border-gray-200 hover:border-[#a8e0b5]"}`}
-            style={{ borderRadius: "50px" }}>
-            {tab} ({tab === "All" ? orders.length : orders.filter(o => o.status === tab).length})
-          </button>
-        ))}
+        {tabs.map(tab => {
+          const count = tab === "All" ? orders.length : orders.filter(o => o.status === tab).length;
+
+          return (<Tab tab={tab}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            count={count} />)
+        })}
       </div>
 
 

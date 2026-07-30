@@ -11,6 +11,7 @@ import CheckoutPage from './Pages/CheckoutPage.jsx';
 import ConfirmationPage from './Pages/ConfirmationPage.jsx';
 import MyProductsPage from './Pages/MyProductsPage.jsx';
 import FarmerOrderPage from './Pages/FarmerOrderPage.jsx';
+import CustomerOrderPage from './Pages/CustomerOrderPage.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')).render(
       <Route path="/confirmationpage" element={<ConfirmationPage/>} />
       <Route path="/myproducts" element={<MyProductsPage/>} />
       <Route path="/farmerorder" element={<FarmerOrderPage/>} />
+       <Route path="/myorders" element={<CustomerOrderPage/>} />
      
    </Routes>
   </BrowserRouter>,
