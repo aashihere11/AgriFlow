@@ -17,7 +17,7 @@ function CustomerOrderPage() {
             orders.filter(o => o.status === "Delivered");
 
     return (<>
-        <div className='min-h-screen bg-[#f4f7f4] p-5'>
+        <div className='min-h-screen bg-[#f4f7f4]  p-4 '>
 
             {/* TOP BAR */}
             <div className="flex items-center gap-3 mb-6">
