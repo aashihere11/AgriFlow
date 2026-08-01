@@ -2,8 +2,8 @@ export const orders = [
   {
     id: 1,
     orderId: "#FD2026060601",
-    time: "Today, 9:32 AM",
-    status: "Pending",
+     date: "2026-07-29T08:15:00",
+    status: "Delivered",
     items: [
       { emoji: "🍅", name: "Farm Tomatoes", qty: "2kg" },
       { emoji: "🥕", name: "Organic Carrots", qty: "1kg" },
@@ -22,8 +22,8 @@ export const orders = [
   {
     id: 2,
     orderId: "#FD2026060602",
-    time: "Today, 8:15 AM",
-    status: "Packed",
+   date: "2026-07-28T09:32:00",
+    status: "Delivered",
     items: [
       { emoji: "🥬", name: "Fresh Spinach", qty: "2 bunch" },
       { emoji: "🍯", name: "Raw Honey", qty: "1 jar" },
@@ -42,7 +42,7 @@ export const orders = [
   {
     id: 3,
     orderId: "#FD2026060603",
-    time: "Yesterday, 7:45 AM",
+    date: "2026-07-27T07:45:00", 
     status: "Out-For-Delivery",
     items: [
       { emoji: "🌽", name: "Sweet Corn", qty: "4 pc" },
@@ -61,7 +61,7 @@ export const orders = [
   {
     id: 4,
     orderId: "#FD2026060604",
-    time: "Yesterday, 6:00 AM",
+    date: "2026-08-01T10:00:00",
     status: "Delivered",
     items: [
       { emoji: "🍅", name: "Farm Tomatoes", qty: "3kg" },
