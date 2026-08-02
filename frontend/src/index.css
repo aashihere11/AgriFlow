@@ -1,24 +1,24 @@
 .body {
-    background-color: #5c6e41;
+  background-color: #5c6e41;
 }
 
 
 a {
   color: inherit;
   text-decoration: none;
-  }
+}
 
-  a:hover{
-    color: #044a19;
-  }
-  
+a:hover {
+  color: #044a19;
+}
+
 
 .logo {
-    width: clamp(80px, 15vw, 200px);
-    height: auto;
-    margin-left: 5vw;
-    margin-top: -8vh;
-    
+  width: clamp(80px, 15vw, 200px);
+  height: auto;
+  margin-left: 5vw;
+  margin-top: -8vh;
+
 }
 
 .trend-up {
@@ -38,29 +38,41 @@ a {
 }
 
 /* index.css */
-.stock-good { color: #2e8a48; }  /* green — achha stock */
-.stock-low  { color: #e67e22; }  /* orange — kam stock */
-.stock-out  { color: #e74c3c; }  /* red — khatam */
-
-
-.search{
-    margin-top: -8vh;
-    
+.stock-good {
+  color: #2e8a48;
 }
 
-.media-card{
-    width:clamp(80px, 100vw, 200px); 
-    height: auto;
+/* green — achha stock */
+.stock-low {
+  color: #e67e22;
 }
 
-.profile{
-    margin-top: -10vw;
+/* orange — kam stock */
+.stock-out {
+  color: #e74c3c;
+}
+
+/* red — khatam */
+
+
+.search {
+  margin-top: -8vh;
+
+}
+
+.media-card {
+  width: clamp(80px, 100vw, 200px);
+  height: auto;
+}
+
+.profile {
+  margin-top: -10vw;
 }
 
 
-.font-size{
-    font-size: clamp(10px, 1vw, 20px);
-    padding: clamp(2px, 1vw, 4px); 
+.font-size {
+  font-size: clamp(10px, 1vw, 20px);
+  padding: clamp(2px, 1vw, 4px);
 }
 
 .custom-border {
@@ -85,26 +97,48 @@ a {
 }
 
 /* index.css */
-.dot-Fresh   { background: #2e8a48; }
-.dot-Update { background: #e67e22; }
-.dot-Expired { background: #e74c3c;}
+.dot-Fresh {
+  background: #2e8a48;
+}
 
-.text-fresh   { color: #2e8a48; }
-.text-Update { color: #e67e22; }
-.text-Expired { color: #e74c3c; }
+.dot-Update {
+  background: #e67e22;
+}
+
+.dot-Expired {
+  background: #e74c3c;
+}
+
+.text-fresh {
+  color: #2e8a48;
+}
+
+.text-Update {
+  color: #e67e22;
+}
+
+.text-Expired {
+  color: #e74c3c;
+}
 
 
 @keyframes popIn {
-  from{transform: scale(0);}
-  to {scale:(1);}
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    scale: (1);
+  }
 }
 
 @keyframes fadeUp {
-  from{
+  from {
     opacity: 0;
     transform: translateY(15px);
   }
-  to{
+
+  to {
     opacity: 1;
     transform: translateY(0);
   }
@@ -126,8 +160,8 @@ a {
   animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s both;
 }
 
-.success-title{
-  animation: fadeUp 0.4s ease  0.6 both ;
+.success-title {
+  animation: fadeUp 0.4s ease 0.6 both;
 }
 
 .success-title {
@@ -154,31 +188,39 @@ a {
   color: #b8860b;
   border: 0.5px solid #d4b55a;
 }
- 
+
 .Packed {
   background: #e8f4fd;
   color: #1a6fa8;
   border: 0.5px solid #90caf9;
 }
- 
+
 .Out-For-Delivery {
   background: #f3e8fd;
   color: #7b3fa8;
   border: 0.5px solid #ce93d8;
 }
- 
+
 .Delivered {
   background: #f0faf2;
   color: #2e8a48;
   border: 0.5px solid #a8e0b5;
 }
- 
-.pulse-dot{
+
+.pulse-dot {
   animation: pulseDot 1.5s ease-in-out infinite;
 }
 
 @keyframes pulseDot {
-  0% {box-shadow: 0 0 0 0 rgba(46, 138, 72, 0.4); }
-  70% {box-shadow: 0 0 0 10px rgba(46, 138, 72, 0); }
-  100% {box-shadow: 0 0 0 0 rgba(46, 138, 72, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 138, 72, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(46, 138, 72, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 138, 72, 0);
+  }
 }
