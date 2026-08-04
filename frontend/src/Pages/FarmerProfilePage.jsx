@@ -1,10 +1,55 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import ProfileCard from '../Components/FarmerProfile/ProfileCard';
 import { farmerProfile } from '../data/profile';
+import Modal from '../Components/FarmerProfile/modal.jsx';
+import InfoForm from '../Components/FarmerProfile/InfoForm.jsx';
+import BankInfoForm from '../Components/FarmerProfile/BankInfoForm.jsx';
+import FarmInfoForm from '../Components/FarmerProfile/FarmInfoForm.jsx';
+
+
 function FarmerProfilePage() {
- const [isOpen, setIsOpen] = useState(false);
- const [form, setForm] = useState(null);
-  const { name, phone, email, location, memberSince, verified, avatar, farm, bank } = farmerProfile
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalType, setModalType] = useState(null);
+  const { name, phone, email, location, memberSince, verified, avatar, farm, bank } = farmerProfile;
+
+  const modalOpen = (type) => {
+    setModalType(type);
+    setModalIsOpen(true);
+  }
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setModalType(null);
+  };
+
+  const modalTitles = {
+    personal: "Edit Personal Info",
+    farm: "Edit Farm Details",
+    bank: "Edit Bank Details",
+  };
+
+  // FarmerProfile.jsx
+  const [form, setForm] = useState({
+    // personal
+    name: farmerProfile.name,
+    phone: farmerProfile.phone,
+    email: farmerProfile.email,
+    location: farmerProfile.location,
+    // farm
+    farm: farmerProfile.farm.name,
+    size: farmerProfile.farm.size,
+    village: farmerProfile.farm.village,
+    // bank
+    bankName: farmerProfile.bank.bankName,
+    accountNumber: farmerProfile.bank.accountNumber,
+    ifsc: farmerProfile.bank.ifsc,
+    upi: farmerProfile.bank.upi,
+  });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: [e.target.value] });
+  };
+
   return (<>
     <div className='min-h-screen  bg-[#f4f7f4] p-5 '
     >
@@ -48,6 +93,7 @@ function FarmerProfilePage() {
             { icon: "✉️", label: "Email", value: email },
             { icon: "✉️", label: "Location", value: location }
           ]}
+          onEdit={() => modalOpen("personal")}
         />
         <ProfileCard
           title="Farm details"
@@ -55,7 +101,8 @@ function FarmerProfilePage() {
             { icon: "🌾", label: "Farm name", value: farm.name },
             { icon: "📐", label: "Farm size", value: farm.size },
             { icon: "🗺️", label: "Village", value: farm.village },
-          ]} />
+          ]}
+          onEdit={() => modalOpen("farm")} />
         <ProfileCard
           title="Bank Details"
           rows={[
@@ -63,8 +110,17 @@ function FarmerProfilePage() {
             { icon: "💳", label: "Account number", value: bank.accountNumber },
             { icon: "🔢", label: "IFSC code", value: bank.ifsc },
             { icon: "📱", label: "UPI ID", value: bank.upi },
-          ]} />
+          ]}
+          onEdit={() => modalOpen("bank")} />
       </div>
+
+      <Modal isOpen={modalIsOpen}
+        onClose={closeModal}
+        title={modalTitles[modalType]}>
+        {modalType === "personal" && <InfoForm data={form} onChange={handleChange} />}
+        {modalType === "bank" && <BankInfoForm data={form} onChange={handleChange} />}
+        {modalType === "farm" && <FarmInfoForm data={form} onChange={handleChange} />}
+      </Modal>
     </div>
   </>);
 }
