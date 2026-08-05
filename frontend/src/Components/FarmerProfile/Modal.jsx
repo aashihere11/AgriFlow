@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 function Modal({ title, isOpen, onClose, children }) {
-    console.log(title);
+    
     if (!isOpen) return null;
     return (
         <div className='fixed inset-0 bg-black/50 z-50'
@@ -19,7 +19,7 @@ function Modal({ title, isOpen, onClose, children }) {
                     </button>
                     <button
                         className="flex-1 py-2.5 text-xs font-medium text-white bg-[#2e8a48] rounded-lg hover:bg-[#1a5c2e] transition-colors ">
-                        Save product
+                        Save Details
                     </button>
                 </div>
 

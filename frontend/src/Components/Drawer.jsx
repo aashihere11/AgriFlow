@@ -31,7 +31,7 @@ export default function TemporaryDrawer() {
         { path: "/myproducts", label: "My Products" },
         { path: "/farmer/orders", label: "Orders" },
         { path: "/farmer/earnings", label: "Earnings" },
-        { path: "/farmer/profile", label: "Profile" },
+        { path: "/profile", label: "Profile" },
         { path: "/farmer/settings", label: "Settings" },
         { path: "/", label: "Logout" }
     ];
