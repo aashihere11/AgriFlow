@@ -2,6 +2,9 @@
   background-color: #5c6e41;
 }
 
+html {
+  scroll-behavior: smooth;
+}
 
 a {
   color: inherit;
@@ -223,4 +226,20 @@ a:hover {
   100% {
     box-shadow: 0 0 0 0 rgba(46, 138, 72, 0);
   }
+}
+
+@keyframes float {
+
+  0%, 100%{
+    transform: translateY(0);
+  }
+
+  50%{
+    transform: translateY(-10px);
+  }
+  
+}
+
+.fadeUp {
+    animation: fadeUp 0.6s ease 0.3s both;
 }

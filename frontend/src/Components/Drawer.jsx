@@ -17,14 +17,7 @@ export default function TemporaryDrawer() {
         setOpen(newOpen);
     };
 
-    const menuItems = [
-        { label: 'Vegetables', icon: <i className="fa-solid fa-seedling"></i>, path: '/vegetables' },
-        { label: 'Fruits', icon: <i className="fa-solid fa-apple-whole"></i>, path: '/fruits' },
-        { label: 'Grains', icon: <i className="fa-solid fa-wheat-awn"></i>, path: '/grains' },
-        { label: 'Herbs & Spices', icon: <i className="fa-solid fa-mortar-pestle"></i>, path: '/spices' },
-        { label: 'dairy', icon: <i className="fa-solid fa-mortar-pestle"></i>, path: '/spices' },
-        { label: 'Honey & Natural', icon: <i className="fa-solid fa-mortar-pestle"></i>, path: '/spices' }
-    ];
+   
 
     const navItems = [
         { path: "/dashboard", label: "Dashboard" },
@@ -41,20 +34,7 @@ export default function TemporaryDrawer() {
         setOpen(false);
     }
     const DrawerList = (
-        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} style={{ backgroundColor: "rgba(168, 218, 141, 0.84)" }}>
-            <List>
-                {menuItems.map((item) => (
-                    <ListItem key={item.label} disablePadding>
-                        <ListItemButton onClick={() => handleNavigate(item.path)}>
-                            <ListItemIcon>
-                                {item.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={item.label} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
+        <Box className="min-h-screen bg-[#a8da8dd6] font-medium" sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} >
             <List>
                 {navItems.map((item) => (
                     <ListItem key={item.label} disablePadding>
