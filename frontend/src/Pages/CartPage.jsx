@@ -1,9 +1,31 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import OrderSummary from "../Components/CartPage/OrderSummary";
+import CartItem from "../Components/CartPage/CartItem";
+import { Items } from "../data/cart";
 function CartPage() {
     const navigate = useNavigate();
     const [qty, setQty] = useState(1);
-    const [total, setTotal] = useState(190)
+    const [total, setTotal] = useState(190);
+    
+    const [checkedItems, setCheckedItems] = useState(Items.filter(item => item.id));
+     const allChecked = checkedItems.length === Items.length;
+
+     const handleCheck = (itemId) =>{
+      setCheckedItems(prev => {
+        if (prev.includes(itemId)) {
+          return prev.filter(id => id !== itemId);
+        } else {
+          return [...prev, itemId];
+        }
+      });
+     }
+
+     const handleSelectAll = () =>{
+      setCheckedItems(allChecked ? [] : Items.map(item => item.id));
+     }
+
+
     return (
         <>
 
@@ -30,83 +52,59 @@ function CartPage() {
 
             </div>
 
-            <div className=" page grid grid-cols-2 gap-4  m-10 justify-center items-start ">
-                <div className="col-span-1 px-5">
-                    <p className="text-gray-600">Items in your cart</p>
-                    <div className="cart-card flex items-center border-1 rounded-xl border-gray-200 hover:border-green-400 overflow-y-auto">
-                        <div className="h-24 w-24 rounded-xl flex items-center justify-center m-4 overflow-hidden flex-shrink-0">
-                            <img className="w-full h-full object-cover" src="media/grain.jpg" alt="logo" />
-                        </div>
+            <div className=" page grid  md:grid-cols-2 gap-4  m-10 justify-center items-start ">
+                 {/* LEFT — CART ITEMS */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm md:text-xl font-serif font-medium text-gray-800 m-0">Your cart</p>
+            <button 
+              className="text-xs  font-serif  text-red-400 hover:text-red-600 transition-colors bg-transparent border-none cursor-pointer">
+              Clear all
+            </button>
+          </div>
+ 
+          {/* SELECT ALL */}
+          <div className="flex items-center gap-3 px-3 py-2.5 bg-gray-50 rounded-xl mb-3 cursor-pointer">
+            <input
+              type="checkbox"
+            //   ref={el => { if (el) el.indeterminate = someChecked; }}
+              onChange={handleSelectAll}
+              className="w-4 h-4 accent-[#2e8a48] cursor-pointer"
+            />
+            <span className="text-sm md:text-lg font-medium text-gray-700">Select all</span>
+            <span className="text-xs md:text-lg text-gray-400 ml-auto">{Items.length} items</span>
+          </div>
+ 
+          {/* SCROLLABLE ITEMS */}
+          {Items.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-5xl mb-3">🛒</div>
+              <p className="text-sm text-gray-400 m-0">Your cart is empty</p>
+              <button onClick={() => navigate('/products')}
+                className="mt-4 px-6 py-2 bg-[#2e8a48] text-white text-sm rounded-xl hover:bg-[#1a5c2e] transition-colors border-none cursor-pointer">
+                Shop now
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="overflow-y-auto max-h-[420px] pr-1"
+                style={{ scrollbarWidth: "thin", scrollbarColor: "#a8e0b5 #f9fafb" }}>
+                {Items.map(item => (
+                  <CartItem
+                    key={item.id}
+                    item={item}
+                    Checked={checkedItems.includes(item.id)}
+                    onCheck={handleCheck}
+                  />
+                ))}
+              </div>
+              <p className="text-center text-xs text-gray-400 mt-3 m-0">↕ Scroll to see all items</p>
+            </>
+          )}
+        </div>
+ 
+                <OrderSummary />
 
-                        <div>
-                            <div className="text-sm font-medium mb-2"> grains</div>
-                            <div className="rounded-3xl bg-green-50 border-green-200 border-1 text-sm text-green-800 px-2">🌾 Ramesh Farm, Nashik</div>
-                            <div className="text-sm mt-2">₹80 / kg</div>
-                        </div>
-
-                        <div className="item-right flex flex-col items-end gap-2  ml-auto mr-4">
-                            <div className="font-medium text-lg">₹{total}</div>
-                            <div className="flex items-center justify-center">
-
-                                <div className='flex items-center rounded-4xl border-1 border-gray-200  truncate ' >
-                                    <button
-                                        onClick={() => setQty(q => Math.max(1, q - 1))}
-                                        className='w-9  h-8 text-lg  hover:bg-[#f0faf2] text-lg text-green-800 font-medium'
-                                    >
-                                        −
-                                    </button >
-                                    <span className="font-medium text-lg  px-2 text-center text-[black] ">
-                                        {qty}
-                                    </span>
-                                    <button
-                                        onClick={() => setQty(q => q + 1)}
-                                        className='w-9 h-8 text-lg  hover:bg-[#f0faf2] text-lg text-green-800 font-medium '>
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                            <button className="text-sm text-gray-400 hover:text-red-800 ">Remove</button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* right order summary */}
-                <div className="col-span-1 ml-5 border-1 border-gray-200 rounded-xl gap-2 px-5 " >
-                    <div className="text-3xl  text-green-800  font-serif mb-2 mt-2">Order Summary</div>
-                    <div className="bg-[#f0faf2] py-2 px-2 mb-2">
-                        <span className="text-md font-medium  text-green-800 ">SUPPORTING LOCAL FARMERS</span>
-                        <p className="text-sm font-sm text-green-800 ">Your order supports 4 small farmers directly. No middlemen involved.</p>
-                    </div>
-
-                    <div className="flex gap-2">
-                        <input className="text-sm rounded-md border-1  text-[#1a1a1a] font-medium md:font-sm px-2 py-2 bg-[#ffffff] " type="text" id="promo-input" placeholder="Promo code (try FARM10)" />
-                        <button className="text-sm rounded-md font-medium text-green-800 px-2 hover:bg-[#f0faf2]  border-1" >Apply</button>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-md  text-[#6b7280] "><span>Subtotal</span><span className="">₹<span id="subtotal">540</span></span></div>
-                        <div className="flex justify-between text-md text-[#6b7280]    "><span>Delivery</span><span className="text-green-800">Free</span></div>
-                        <div className="flex justify-between text-md  text-[#6b7280]  "><span>Platform fee</span><span>₹0</span></div>
-                        <hr />
-                        <div className="flex justify-between text-md  text-[#6b7280] gap-5">
-                            <span>Total</span><span>₹<span id="total">540</span></span>
-                        </div>
-                    </div>
-                    <div className="flex flex-col items-center mt-2">
-                        <div className="text-md rounded-md text-center bg-[#f5ecd7] border-1 border-[#d4b55a] py-3 px-1 font-medium">
-                            🌿 You're saving ₹<span id="savings">180</span> vs supermarket prices
-                        </div>
-
-                        <button className="checkout-btn text-sm font-serif text-center font-medium 
-                        bg-[#2e8a48] rounded-md text-[#fff] mt-4 px-2 py-3 border-1 hover:bg-[#1a5c2e]"
-                            onClick={() => navigate("/checkoutpage")} >
-                            Proceed to Checkout →
-                        </button>
-                        <a href="#" className="continue-btn no-underline text-sm font-serif text-center font-medium rounded-md 
-                     mt-4 px-2 py-3 border-1 border-[#5cba78] text-[#2e8a48]"
-                            onClick={() => navigate("/homepage")}>Continue Shopping</a>
-                    </div>
-
-                </div>
             </div>
 
         </>
