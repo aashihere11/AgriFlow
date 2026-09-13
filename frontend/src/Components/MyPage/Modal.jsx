@@ -14,19 +14,19 @@ function Modal({ mode, product, isOpen, onClose, setForm, form }) {
                 onClick={(e) => e.stopPropagation()}>
 
                 {/* MODAL */}
-                <h2 className="font-serif text-lg text-[#1a5c2e] mb-4" > {mode === "add" ? "Add Product" : "Edit Product"}</h2>
+                <h2 className="font-serif !text-base md:!text-2xl text-[#1a5c2e] mb-4" > {mode === "add" ? "Add Product" : "Edit Product"}</h2>
 
                 <div className="flex flex-col gap-1 mb-3">
-                    <label className="text-xs text-gray-500">Product name</label>
+                    <label className="text-xs md:text-base text-gray-500">Product name</label>
                     <input name="name"
                         placeholder="e.g. Farm Tomatoes"
-                        className="px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-[#5cba78]"
+                        className="px-2 py-2 text-xs md:text-base border border-gray-200 rounded-lg outline-none focus:border-[#5cba78]"
                         value={form.name} onChange={handleChange} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 mb-3">
                     <div className="flex flex-col gap-1">
-                        <label className="text-xs text-gray-500">Price (₹)</label>
+                        <label className="text-xs md:text-base text-gray-500">Price (₹)</label>
                         <input name="price"
                             type="number" placeholder="80"
                             className="px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-[#5cba78]"
@@ -34,9 +34,9 @@ function Modal({ mode, product, isOpen, onClose, setForm, form }) {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label className="text-xs text-gray-500">Unit</label>
+                        <label className="text-xs md:text-base text-gray-500">Unit</label>
                         <select name="unit"
-                            className="px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-[#5cba78] bg-white"
+                            className="px-3 py-2 text-sm md:text-base border border-gray-200 rounded-lg outline-none focus:border-[#5cba78] bg-white"
                             value={form.unit} onChange={handleChange}>
                             <option>Kg</option>
                             <option>Qunital</option>
@@ -53,10 +53,10 @@ function Modal({ mode, product, isOpen, onClose, setForm, form }) {
                 </div>
 
                 <div className="flex flex-col gap-1 mb-3">
-                    <label className="text-xs text-gray-500">Stock quantity</label>
+                    <label className="text-xs md:text-base text-gray-500">Stock quantity</label>
                     <input name="stock"
                         type="number" placeholder="20"
-                        className="px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-[#5cba78]"
+                        className="px-3 py-2 text-sm md:text-base border border-gray-200 rounded-lg outline-none focus:border-[#5cba78]"
                         value={form.stock} onChange={handleChange} />
 
                 </div>
@@ -77,12 +77,12 @@ function Modal({ mode, product, isOpen, onClose, setForm, form }) {
 
                 <div className="flex gap-3">
                     <button
-                        className="flex-1 py-2.5 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50"
+                        className="flex-1 py-2.5 !text-sm md:!text-base text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50"
                         onClick={onClose}>
                         Cancel
                     </button>
                     <button
-                        className="flex-1 py-2.5 text-sm font-medium text-white bg-[#2e8a48] rounded-lg hover:bg-[#1a5c2e] transition-colors">
+                        className="flex-1 py-2.5 !text-sm md:!text-base font-medium text-white bg-[#2e8a48] rounded-lg hover:bg-[#1a5c2e] transition-colors">
                         Save product
                     </button>
                 </div>

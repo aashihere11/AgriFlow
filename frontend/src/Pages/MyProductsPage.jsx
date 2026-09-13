@@ -19,24 +19,26 @@ function MyProductsPage() {
   const navigate = useNavigate();
 
   return (<>
-    <div className='min-h-screen bg-[#f4f7f4] p-6'>
+    <div className='min-h-screen bg-[#f4f7f4] '>
 
       {/* TOP BAR */}
-      <div className="flex items-center justify-between mb-6 ">
-        <div className='flex items-center gap-5 '>
-          <button onClick={() => navigate(-1)}><ArrowBackIcon />Back</button>
-          <p className="font-serif text-base md:text-4xl text-[#1a5c2e] m-0">My Products</p>
+      <div className="flex items-center justify-between bg-white  ">
+        <div className='flex items-center gap-3 min-w-0 max-w-50 px-3 '>
+          <button onClick={() => navigate(-1)} className='!text-sm md:!text-base text-nowrap'><ArrowBackIcon />Back</button>
+          <img src="media/logo.png" alt="img" />
         </div>
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#2e8a48] text-white text-sm font-medium rounded-lg hover:bg-[#1a5c2e] transition-colors">
+          className="flex items-center gap-2 px-2 py-2 bg-[#2e8a48] text-white !text-sm md:!text-lg font-medium !rounded-lg hover:bg-[#1a5c2e] transition-colors">
           ➕ Add product
         </button>
       </div>
 
+      <p className="font-serif text-base md:text-4xl text-[#1a5c2e] px-5 pt-3 m-0">My Products</p>
+
       {/* PRODUCT GRID */}
-      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-5'>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3'>
         {products.map((product) =>
         (<ProductCard
           key={product.id}
