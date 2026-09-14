@@ -6,24 +6,26 @@ function OrderSummary() {
   const savings = Math.round(subtotal * 0.33);
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-xl p-4 h-fit">
+      <div className="bg-white border border-gray-200 rounded-xl p-4  h-full">
         <h2 className="text-sm font-medium text-gray-800 mb-4">Order summary</h2>
+        <div className="overflow-y-auto max-h-[400px] "
+          style={{ scrollbarWidth: "thin", scrollbarColor: "#a8e0b5 #f9fafb" }}>
+          {orderItems.map((item) => (
+            <div key={item.id} className="flex items-center gap-3 py-2 border-b border-gray-100 last:border-none">
+              <div className="w-15 h-15 rounded-lg flex items-center justify-center mb-2 overflow-hidden">
+                {item.emoji}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm md:text-base font-medium text-gray-800 m-0">{item.name}</p>
+                <p className="text-sm md:text-base text-gray-400 m-0">{item.detail}</p>
 
-        {orderItems.map((item) => (
-          <div key={item.id} className="flex items-center gap-3 py-2 border-b border-gray-100 last:border-none">
-            <div className="w-15 h-15 rounded-lg flex items-center justify-center mb-2">
-              {item.emoji}
+              </div>
+              <p className="text-sm md:text-base font-medium text-[#1a5c2e] m-0 px-3">₹{item.price}</p>
             </div>
-            <div className="flex-1">
-              <p className="text-base font-medium text-gray-800 m-0">{item.name}</p>
-              <p className="text-base text-gray-400 m-0">{item.detail}</p>
+          ))}
+        </div>
 
-            </div>
-            <p className="text-base font-medium text-[#1a5c2e] m-0">₹{item.price}</p>
-          </div>
-        ))}
-
-        <div className="mt-3">
+        <div className="p-3">
           <div className="flex justify-between text-base text-gray-500 mb-2">
             <span>Subtotal</span><span>₹{subtotal}</span>
           </div>
@@ -38,13 +40,13 @@ function OrderSummary() {
           </div>
         </div>
 
-        <div className="bg-[#f0faf2] border border-[#a8e0b5] rounded-lg p-2 text-base text-[#1a5c2e] text-center my-3">
+        <div className="bg-[#f0faf2] border border-[#a8e0b5] rounded-lg p-2 text-sm md:text-base text-[#1a5c2e] text-center my-3">
           🌿 Saving ₹{savings} vs supermarket prices
         </div>
 
         <button
 
-          className="w-full py-3 bg-[#2e8a48] hover:bg-[#1a5c2e] text-white text-base font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+          className="w-full py-3 bg-[#2e8a48] hover:bg-[#1a5c2e] text-white text-sm  md:!text-base font-medium !rounded-lg transition-colors flex items-center justify-center gap-2"
           onClick={() => navigate("/confirmationpage")}>
           🔒 Pay₹{subtotal} securely
         </button>

@@ -26,22 +26,25 @@ function CheckoutPage() {
 
     return (
         <>
-            <div className='min-h-screen bg-[#f4f7f4] p-5'>
-                <div className='flex gap-2 mb-6 items-center'>
-                    <button className='border flex items-center justify-center 
-                         border-gray-400 bg-white'
-                        style={{ borderRadius: "50%", width: "30px", height: "30px" }}
-                        onClick={() => navigate("/cart")}>
-                        <ArrowBackIcon style={{ fontSize: "18px" }} />
-                    </button>
-                    <p className='font-medium text-xs md:text-2xl text-[#1a5c2e] m-0'>Checkout</p>
-                </div>
+            <div className='min-h-screen bg-[#f4f7f4] '>
+                <nav className="flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
+
+                    <a href="" className="w-60">
+                        <img src="media/logo.png" alt="logo" />
+                    </a>
+
+
+                    {/* Secure badge */}
+                    <span className="text-xs md:text-lg text-gray-400 flex items-center text-nowrap">
+                        🔒 Secure checkout
+                    </span>
+                </nav>
 
                 {/* STEPS */}
                 <CheckoutSteps />
 
                 {/* LAYOUT */}
-                <div className='grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-4'>
+                <div className='grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-4 p-3'>
                     {/* LEFT */}
                     <div>
                         <DeliveryAddress form={form} handleChange={handleChange} />
