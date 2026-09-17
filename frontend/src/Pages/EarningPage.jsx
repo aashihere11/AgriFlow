@@ -4,7 +4,6 @@ import { getMonthStart, getRecentTransactions, getProductEarning } from '../util
 import { getTotalEarnings } from '../utils/Earning';
 import { getThisWeekEarnings } from '../utils/Earning';
 import { getThisMonthEarnings } from '../utils/Earning';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 function EarningPage() {
@@ -28,31 +27,39 @@ function EarningPage() {
     },
     {
       label: "Orders",
-      value: "monthOrders",
+      value: "month",
       sub: `${orders.length.toLocaleString()}`
     }
   ];
 
   return (<>
-    <div className='min-h-screen  bg-[#f4f7f4] p-5 '>
-      <div className='flex items-center justify-between mb-3'>
-        <div><button onClick={() => navigate(-1)}><ArrowBackIcon />Back</button>
-        <h1 className="font-serif text-2xl text-[#1a5c2e] mt-2">Earnings</h1>
-        </div>
+    <div className='min-h-screen  bg-[#f4f7f4]  '>
+      <nav className="flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
+
+        <a href="" className="w-60">
+          <img src="media/logo.png" alt="logo" />
+        </a>
+
+
         <p className='text-xs md:text-lg text-gray-400 m-0'>july 2026</p>
-      </div>
+      </nav>
+
+
 
       {/* TOTAL CARD */}
-      <div className="rounded-2xl p-5 mb-4 text-white shadow-2xl "
-        style={{ background: "linear-gradient(135deg, #2e8a48, #1a5c2e)" }}>
-        <p className="text-xs md:text-lg opacity-80 m-0 mb-1">Total earnings</p>
-        <p className="font-serif text-4xl m-0 mb-1">Rs.{totalEarnings}</p>
-        <p className="text-xs md:text-base opacity-70 m-0">Since you joined AgriFlow</p>
+      <div className='p-3'>
+        <div className="rounded-2xl p-3  text-white shadow-2xl  "
+          style={{ background: "linear-gradient(135deg, #2e8a48, #1a5c2e)" }}>
+          <p className="text-xs md:text-lg opacity-80 m-0 mb-1">Total earnings</p>
+          <p className="font-serif text-2xl md:text-4xl m-0 mb-1">Rs.{totalEarnings}</p>
+          <p className="text-xs md:text-base opacity-70 m-0">Since you joined AgriFlow</p>
+        </div>
       </div>
+
 
 
       {/* STATS */}
-      <div className="flex gap-3 mb-4 ">
+      <div className="flex gap-3 mb-4 p-3">
         {stats.map(stat => (
           <div key={stat.label} className="bg-white border-2 border-gray-200 rounded-xl p-3 w-40 shadow-xl
           hover:border-[#1a5c2e]  transition-colors" >
@@ -64,41 +71,45 @@ function EarningPage() {
       </div>
 
       {/* PRODUCT EARNINGS */}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-5 '>
+      <div className='grid grid-cols-1 md:grid-cols-2 md:gap-5 p-3'>
         <div className="bg-white border border-gray-200 rounded-xl p-4 mb-4 ">
           <p className="text-sm md:text-xl font-medium text-gray-800 m-0 mb-3">Earnings by product</p>
-          {products.map(product => (
+          <div className='max-h-[420px] overflow-y-auto'>
+            {products.map(product => (
 
-            <div className="flex items-center  gap-1 md:gap-5 py-2.5 border-b border-gray-100 last:border-none">
-              <div className=" w-8 h-8 md:w-15 md:h-15 rounded-lg flex items-center justify-center text-lg flex-shrink-0">
-                {product.emoji}
-              </div>
-              <div className="">
-                <p className="text-xs md:text-lg font-medium text-gray-800 m-0">{product.name}</p>
-                <p className="text-xs md:text-lg text-gray-400 m-0">{product.qtySold}{product.unit} Sold</p>
-              </div>
+              <div className="flex items-center  gap-1 md:gap-5 py-2.5 border-b border-gray-100 last:border-none ">
+                <div className=" w-8 h-8 md:w-15 md:h-15 rounded-lg flex items-center justify-center text-lg flex-shrink-0">
+                  {product.emoji}
+                </div>
+                <div className="">
+                  <p className="text-xs md:text-lg font-medium text-gray-800 m-0">{product.name}</p>
+                  <p className="text-xs md:text-lg text-gray-400 m-0">{product.qtySold}{product.unit} Sold</p>
+                </div>
 
-              <p className="text-sm md:text-lg text-end font-medium text-[#1a5c2e] m-0 flex-shrink-0 flex-1">
-                Rs.{product.amount}
-              </p>
-            </div>
-          ))}
+                <p className="text-xs md:text-lg text-end font-medium text-[#1a5c2e] m-0 flex-1">
+                  Rs.{product.amount}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* RECENT TRANSACTIONS */}
         <div className="bg-white border border-gray-200 rounded-xl p-4 mb-4">
           <p className="text-sm md:text-xl font-medium text-gray-800 m-0 mb-3">Recent transactions</p>
-          {transactions.map(txn => (
-            <div key={txn.id} className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-none">
-              <div>
-                <p className="text-xs md:text-lg font-medium text-gray-800 m-0">
-                  {txn.orderId} · {txn.consumer.name}
-                </p>
-                <p className="text-xs md:text-lg text-gray-400 m-0 mt-0.5"></p>
+          <div className='max-h-[420px] overflow-y-auto'>
+            {transactions.map(txn => (
+              <div key={txn.id} className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-none ">
+                <div>
+                  <p className="text-xs md:text-lg font-medium text-gray-800 m-0">
+                    {txn.orderId} · {txn.consumer.name}
+                  </p>
+                  <p className="text-xs md:text-lg text-gray-400 m-0 mt-0.5"></p>
+                </div>
+                <p className="text-xs md:text-lg font-medium text-[#2e8a48] m-0">+Rs.{txn.total}</p>
               </div>
-              <p className="text-sm md:text-lg font-medium text-[#2e8a48] m-0">+Rs.{txn.total}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
       </div>

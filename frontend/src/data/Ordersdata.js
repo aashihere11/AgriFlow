@@ -25,8 +25,8 @@ export const orders = [
     date: "2026-07-28T09:32:00",
     status: "Delivered",
     items: [
-      { emoji: "🥬", name: "Fresh Spinach", qty: 2, unit: "bunch",  price: 40 },
-      { emoji: "🍯", name: "Raw Forest Honey", qty: 1, unit: "jar",  price: 220 },
+      { emoji: "🥬", name: "Fresh Spinach", qty: 2, unit: "bunch", price: 40 },
+      { emoji: "🍯", name: "Raw Forest Honey", qty: 1, unit: "jar", price: 220 },
     ],
     total: 300, // 2×40 + 1×220 = 300
     consumer: {
