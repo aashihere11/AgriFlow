@@ -25,32 +25,30 @@ function FarmerOrderPage() {
   ];
 
   return (<>
-    <div className='min-h-screen bg-[#f4f7f4] p-6 font-sans'>
 
-      {/* TOP */}
-      <div className="flex items-center justify-between mb-6">
-        <div className='flex gap-2'>  <TemporaryDrawer open={open} onClose={() => setOpen(false)} />
-          <h1 className="font-serif text-2xl text-[#1a5c2e]">Orders</h1>
-        </div>
+    <div className='min-h-screen bg-[#f4f7f4] font-sans'>
 
-        <p className="text-xs text-gray-400">Today, 23 July 2026</p>
-      </div>
+      <nav className="flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
 
+        <a href="" className="w-60">
+          <img src="media/logo.png" alt="logo" />
+        </a>
 
+      </nav>
 
       {/* STATS */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6 ">
+      <div className="hidden sm:flex  items-center gap-5 mb-6 p-3  ">
         {stats.map((stat) => (
-          <div key={stat.label} className="  bg-white border border-gray-200 rounded-xl p-4">
-            <p className='text-xl m-0'>{stat.icon}</p>
-            <p className=" text-3xl font-bold m-0" style={{ color: stat.color }}>{stat.value}</p>
-            <p className="text-xs text-gray-400 mt-1 m-0">{stat.label}</p>
+          <div key={stat.label} className="  bg-white border border-gray-200 rounded-xl p-3 w-40 h-50">
+            <p className='text-base md:text-xl m-0'>{stat.icon}</p>
+            <p className="text-lg md:text-3xl font-bold m-0" style={{ color: stat.color }}>{stat.value}</p>
+            <p className="text-xs md:text-base text-gray-400 mt-1 m-0">{stat.label}</p>
           </div>
         ))}
       </div>
 
       {/* TABS */}
-      <div className="flex gap-5 mb-5 flex-wrap items-center">
+      <div className="flex gap-2 mb-5  items-center p-3">
         {tabs.map(tab => {
           const count = tab === "All" ? orders.length : orders.filter(o => o.status === tab).length;
 
@@ -64,7 +62,7 @@ function FarmerOrderPage() {
 
       {/* ORDERS LIST */}
       {filterOrders.length === 0 ? (
-        <div className="text-center py-12 text-gray-400 text-sm">
+        <div className="text-center py-12 text-gray-400 text-sm p-3">
           No {activeTab.toLowerCase()} orders
         </div>
       ) : (filterOrders.map(order => (
