@@ -24,16 +24,16 @@ function HomePage() {
       </div>
 
       {/* CATEGORIES */}
-      <div className="fadeUp px-5 py-5">
+      <div className="fadeUp px-3 py-5">
         <div className=" mb-5 reveal">
           <span className="font-serif text-base  md:text-4xl font-medium text-[#1a5c2e]">Shop by category</span>
         </div>
-        <div className="flex gap-3 overflow-x-auto p-2 reveal">
+        <div className="flex gap-3 overflow-x-auto scrollbar-thin p-1 reveal">
           {categories.map(cat => (
             <div
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`flex flex-col items-center gap-1.5 px-5 py-3 rounded-xl border-1 cursor-pointer transition-all
+              className={`flex flex-col items-center gap-1.5 flex-1 p-3 rounded-xl border-1 cursor-pointer transition-all
                 transition duration-150 hover:scale-110
                 ${activeCategory == cat.id ?
                   "bg-[#f0faf2] border-[#2e8a48] "
@@ -46,7 +46,7 @@ function HomePage() {
         </div>
       </div>
 
-      <div className='grid grid-cols-2 sm:grid-cols-3  md:grid-cols-5 gap-3 p-3'>
+      <div className='grid grid-cols-2 sm:grid-cols-3  md:grid-cols-4 gap-3 p-3'>
         {featuredProducts.map((product, i) => (
           <MediaCard
             key={product.id}

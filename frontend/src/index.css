@@ -243,3 +243,12 @@ a:hover {
 .fadeUp {
     animation: fadeUp 0.6s ease 0.3s both;
 }
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

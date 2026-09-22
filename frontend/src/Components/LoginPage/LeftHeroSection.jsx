@@ -3,7 +3,7 @@ import info from '../../data/info';
 function LeftHeroSection() {
     return (<>
         {/* ─── LEFT SIDE ─── */}
-        <div className='bg-white rounded-md border-1 border-[#e0ead8] p-4 mb-5  '
+        <div className='bg-white rounded-md border-1 border-[#e0ead8] p-4 mb-5 hidden md:block'
           >
 
             <p className='text-sm md:text-xl font-medium'>Fresh vegetables, fruits & grains — at your door</p>
