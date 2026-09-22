@@ -2,9 +2,9 @@ import React from 'react';
 import InputField from './InputField';
 
 
-function ProfileEditModal({isOpen, onClose, username, onChange }) {
+function ProfileEditModal({ isOpen, onClose, username, onChange }) {
 
- if (!isOpen) return null;
+    if (!isOpen) return null;
 
     return (<>
         <div className='fixed inset-0 bg-black/50 z-50'
@@ -22,7 +22,7 @@ function ProfileEditModal({isOpen, onClose, username, onChange }) {
                 <input type="file"
                     accept="image/*"
                     className="hidden"
-                    id="profilePhoto"/>
+                    id="profilePhoto" />
 
                 <InputField
                     type="text"
@@ -32,12 +32,12 @@ function ProfileEditModal({isOpen, onClose, username, onChange }) {
                 />
                 <div className="flex  gap-3 mt-3">
                     <button
-                        className="flex-1 px-3 py-2 text-xs text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50"
+                        className=" px-2 py-2 !text-xs md:!text-base text-gray-500 border border-gray-200 !rounded-lg hover:bg-gray-50"
                         onClick={onClose}>
                         Cancel
                     </button>
                     <button
-                        className="flex-1 px-3 py-2 text-sm text-nowrap font-medium text-white bg-[#2e8a48] rounded-lg hover:bg-[#1a5c2e] transition-colors ">
+                        className=" px-2 py-1 !text-xs md:!text-base text-nowrap font-medium text-white bg-[#2e8a48] !rounded-lg hover:bg-[#1a5c2e] transition-colors ">
                         Save Profile
                     </button>
                 </div>

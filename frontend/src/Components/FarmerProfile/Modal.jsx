@@ -13,12 +13,12 @@ function Modal({ title, isOpen, onClose, children }) {
 
                 <div className="flex gap-3">
                     <button
-                        className="flex-1 py-2 text-xs text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50"
+                        className=" px-2 py-1 !text-xs md:!text-base text-gray-500 border border-gray-200 !rounded-lg hover:bg-gray-50"
                         onClick={onClose}>
                         Cancel
                     </button>
                     <button
-                        className="flex-1 py-2.5 text-xs font-medium text-white bg-[#2e8a48] rounded-lg hover:bg-[#1a5c2e] transition-colors ">
+                        className="px-2 py-1 !text-xs md:!text-base  font-medium text-white bg-[#2e8a48] border border-gray-200  !rounded-lg hover:bg-[#1a5c2e] transition-colors ">
                         Save Details
                     </button>
                 </div>

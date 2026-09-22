@@ -7,13 +7,18 @@ import BankInfoForm from '../Components/FarmerProfile/BankInfoForm.jsx';
 import FarmInfoForm from '../Components/FarmerProfile/FarmInfoForm.jsx';
 import ProfileEditModal from '../Components/FarmerProfile/ProfileEditModal.jsx';
 import TemporaryDrawer from '../Components/Drawer.jsx';
+import Tab from '../Components/Tab.jsx';
 
 
 function FarmerProfilePage() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
   const { name, phone, email, location, memberSince, verified, avatar, farm, bank } = farmerProfile;
   const [open, setOpen] = useState(false);
+  const tabs = ["Personal", "Farm", "Bank"];
+
+
 
   const modalOpen = (type) => {
     setModalType(type);
@@ -26,7 +31,7 @@ function FarmerProfilePage() {
   };
 
   const profileModalOpen = () => {
-    setModalIsOpen(true);
+    setIsProfileModalOpen(true);
   }
 
   const modalTitles = {
@@ -54,19 +59,26 @@ function FarmerProfilePage() {
   });
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: [e.target.value] });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   return (<>
-    <div className='min-h-screen  bg-[#f4f7f4] p-5'>
-      <TemporaryDrawer open={open} onClose={() => setOpen(false)} />
+    <nav className="flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
+
+      <a href="" className="w-60">
+        <img src="media/logo.png" alt="logo" />
+      </a>
+
+    </nav>
+    <div className='min-h-screen  bg-[#f4f7f4] p-3'>
+
+
       <div className='flex items-center justify-center  gap-4 p-3 mb-4'>
         <div className='w-20  h-20 sm:w-30 sm:h-30 md:w-50 md:h-50 rounded-full flex items-center justify-center border-2
                 border-black overflow-hidden flex-shrink-0'>
           <img className=' object-cover' src="media/profile.png" alt="img" /></div>
         <div className='mt-3'>
           <p className="font-serif text-xs sm:text-4xl md:text-6xl m-0 mb-1 text-nowrap">{farmerProfile.name}</p>
-          <p className='text-xs sm:text-base md:text-lg opacity-80 m-0  '> Farmer · Member since Jan 2024</p>
           {verified &&
             <div className='inline-flex px-3 py-1 items-center justify-center
                      text-white text-[8px] sm:text-base md:text-lg font-medium rounded-full bg-[#1a5c2e] text-nowrap m-2'>
@@ -81,13 +93,13 @@ function FarmerProfilePage() {
       </div>
 
       {/* STATS */}
-      <div className="grid grid-cols-3 gap-3 mb-4 ">
+      <div className="flex items-center justify-center gap-3 mb-4 ">
         {[
           { label: "Orders delivered", value: 38 },
           { label: "Rating", value: 4.8 },
           { label: "Products listed", value: 12 },
         ].map(stat => (
-          <div key={stat.label} className="bg-white border border-gray-200 rounded-xl p-3 text-center ">
+          <div key={stat.label} className="bg-white border border-gray-200 rounded-xl p-3 text-center w-20 h-20 md:w-40 md:h-30 ">
             <p className="text-xs sm:text-base md:text-2xl font-medium text-[#1a5c2e] m-0">{stat.value}</p>
             <p className="text-[7px] sm:text-base md:text-xl text-gray-400 mt-1 m-0">{stat.label}</p>
           </div>
@@ -107,8 +119,8 @@ function FarmerProfilePage() {
       </Modal>
 
 
-      <ProfileEditModal isOpen={modalIsOpen}
-        onClose={closeModal}
+      <ProfileEditModal isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
         username={name}
         onChange={handleChange}>
       </ProfileEditModal >

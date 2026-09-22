@@ -1,14 +1,14 @@
 import React from 'react';
 function ProfileCard({ title, rows, onEdit }) {
     return (
-        <div className="bg-white border border-gray-200 rounded-xl p-4 mb-4 shadow-xl"
+        <div className="bg-white border border-gray-200 rounded-xl p-3 mb-4 shadow-xl"
             style={{ background: "linear-gradient(135deg, #e8f4fd, #fff)" }}>
 
             <div className="flex items-center justify-between mb-3">
                 <p className="text-xs md:text-xl font-medium text-gray-800 m-0">{title}</p>
                 <button
-                    className="text-xs md:!text-base font-medium text-[#2e8a48] 
-                   bg-[#f0faf2] border border-[#a8e0b5] rounded-lg px-3 py-1"
+                    className="!text-xs md:!text-base font-medium text-[#2e8a48] 
+                   bg-[#f0faf2] border border-[#a8e0b5] !rounded-lg px-2 py-1"
                     onClick={onEdit}>
                     ✏️ Edit
                 </button>
