@@ -14,6 +14,7 @@ import FarmerOrderPage from './Pages/FarmerOrderPage.jsx';
 import CustomerOrderPage from './Pages/CustomerOrderPage.jsx';
 import EarningPage from './Pages/EarningPage.jsx';
 import FarmerProfilePage from './Pages/FarmerProfilePage.jsx';
+import SignupPage from './Pages/SignupPage.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -31,6 +32,7 @@ createRoot(document.getElementById('root')).render(
        <Route path="/myorders" element={<CustomerOrderPage/>} />
        <Route path="/earnings" element={<EarningPage/>} />
         <Route path="/profile" element={<FarmerProfilePage/>} />
+        <Route path="/signup" element={<SignupPage/>} />
      
    </Routes>
   </BrowserRouter>,
