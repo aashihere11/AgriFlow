@@ -1,22 +1,108 @@
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require("bcryptjs");
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const User = require("./Models/User.js");
+const jwt = require('jsonwebtoken');
 const dns = require("dns");
+const cookieParser = require("cookie-parser");
+const authenticate = require("./middleware/authenticate.js");
+
 
 dns.setServers([
   '1.1.1.1',
   '8.8.8.8'
-])
+]);
 
 dotenv.config();
 connectDB();
 
 const app = express();
+app.use(cookieParser());
+app.use(express.json());
 app.use(cors());
 app.get('/', (req, res) => {
   res.send('Hello World')
 })
+
+app.post("/create-user", async (req, res) => {
+  
+  const hashedPassword = await bcrypt.hash("123456", 10);
+  try {
+    const user = await User.create({
+      username: "rahul",
+      email: "rahul@gmail.com",
+      password: hashedPassword,
+      role: "farmer"
+    });
+
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        username: user.username,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict"
+    });
+
+    return res.status(200).json({
+      message: "Login successful"
+    });
+
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  console.log(req.body);
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  const match = await bcrypt.compare(password, user.password);
+
+  if (!match) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  const token = jwt.sign(
+    {
+      userId: user._id,
+      username: user.username,
+      role: user.role
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict"
+  });
+
+  return res.status(200).json({
+    message: "Login successful"
+  });
+
+});
+
 
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000')
