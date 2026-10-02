@@ -15,12 +15,15 @@ import CustomerOrderPage from './Pages/CustomerOrderPage.jsx';
 import EarningPage from './Pages/EarningPage.jsx';
 import FarmerProfilePage from './Pages/FarmerProfilePage.jsx';
 import SignupPage from './Pages/SignupPage.jsx';
+import ProtectedRoute from './Components/ProtectedRoute.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-  <Routes>
-   <Route path="/homepage" element={<HomePage />} />
-    <Route path="/" element={<LoginPage />} />
+  <Routes >
+    <Route path="/login" element={<LoginPage />} />
+     <Route path="/signup" element={<SignupPage/>} />
+    <Route element={<ProtectedRoute/>}>
+   <Route path="/" element={<HomePage />} />
     <Route path="/Vegetables" element={<VegetablePage />}/>
     <Route path="/Product" element={<ProductPage/>} />
      <Route path="/cart" element={<CartPage/>} />
@@ -32,8 +35,7 @@ createRoot(document.getElementById('root')).render(
        <Route path="/myorders" element={<CustomerOrderPage/>} />
        <Route path="/earnings" element={<EarningPage/>} />
         <Route path="/profile" element={<FarmerProfilePage/>} />
-        <Route path="/signup" element={<SignupPage/>} />
-     
+     </Route>
    </Routes>
   </BrowserRouter>,
 )

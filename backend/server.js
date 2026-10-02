@@ -19,12 +19,19 @@ dotenv.config();
 connectDB();
 
 const app = express();
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
-app.get('/', (req, res) => {
-  res.send('Hello World')
-})
+
+
+app.get("/me", authenticate, (req, res) => {
+  res.json({
+    user: req.user
+  });
+});
 
 app.post("/create-user", async (req, res) => {
   
@@ -97,10 +104,10 @@ app.post("/login", async (req, res) => {
     sameSite: "strict"
   });
 
-  return res.status(200).json({
-    message: "Login successful"
-  });
-
+ res.json({
+  success: true,
+  message: "Login successful"
+});
 });
 
 
