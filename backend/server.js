@@ -34,14 +34,51 @@ app.get("/me", authenticate, (req, res) => {
 });
 
 app.post("/create-user", async (req, res) => {
+  const {username, email, phone, password, role, location} = req.body; 
+  const user = await User.findOne({username});
+    const existingemail = await User.findOne({email});
+  if (!email || !username || !phone || !password ) {
+  return res.status(400).json({
+    success: false,
+    message: "All fields are required"
+  });
+}
+  if (!/\S+@\S+\.\S+/.test(email)) {
+  return res.status(400).json({
+    success: false,
+    message: "Please enter a valid email"
+  });
+
+  if (!/^\d{10}$/.test(phone)) {
+  return res.status(400).json({
+    success: false,
+    message: "Phone number must be 10 digits"
+  });
+}
+}
+  if(user){
+     return res.status(409).json({
+    success: false,
+    message: "Username already exists"
+  });
+  }
+
+  if(existingemail){
+     return res.status(409).json({
+    success: false,
+    message: "email already exists"
+  });
+  }
   
-  const hashedPassword = await bcrypt.hash("123456", 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
   try {
     const user = await User.create({
-      username: "rahul",
-      email: "rahul@gmail.com",
+      username,
+      email,
       password: hashedPassword,
-      role: "farmer"
+      role,
+      phone,
+      location
     });
 
     const token = jwt.sign(
@@ -59,11 +96,10 @@ app.post("/create-user", async (req, res) => {
       secure: false,
       sameSite: "strict"
     });
-
-    return res.status(200).json({
-      message: "Login successful"
-    });
-
+return res.status(201).json({
+  success: true,
+  message: "Account created successfully"
+});
 
   } catch (error) {
     res.status(500).json({

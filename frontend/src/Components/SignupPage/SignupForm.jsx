@@ -2,26 +2,38 @@ import React, { useState } from 'react';
 import RoleSelector from './RoleSelector';
 import InputField from './InputField';
 import SocialButtons from './SocialButtons';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 
 export default function SignupForm() {
   const [role, setRole] = useState('consumer');
+  const [error, setError] = useState("");
+    const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    farmLocation: '',
-    password: '',
+    username: "",
+    email: "",
+    password: "",
+    phone: "",
+    location: "",
+   
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log('Form Submitted:', { role, ...formData });
-    alert(`Welcome to AgriFlow! Signed up as ${role}.`);
+    
+    try{
+      await axios.post("http://localhost:3000/create-user",{ ...formData, role }, {withCredentials:true});
+       if (response.data.success) {
+                navigate("/");
+            }
+    }catch(error){
+     setError(error.response?.data?.message || "Something went wrong");
+    }
   };
 
   return (
@@ -47,14 +59,14 @@ export default function SignupForm() {
           or email
         </span>
       </div>
-
+        {error && <p className='text-red-500 font-medium  text-xs md:text-base'>{error}</p>}
       {/* Main Signup Form */}
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-3 "  noValidate>
         <InputField
           label="Full Name"
-          name="fullName"
+          name="username"
           placeholder="User Name"
-          value={formData.fullName}
+          value={formData.username}
           onChange={handleChange}
           icon="👤"
         />
@@ -85,9 +97,9 @@ export default function SignupForm() {
         {role === 'farmer' && (
           <InputField
             label="Farm Location "
-            name="farmLocation"
+            name="location"
             placeholder="Location"
-            value={formData.farmLocation}
+            value={formData.location}
             onChange={handleChange}
             icon="🚜"
           />
@@ -109,7 +121,6 @@ export default function SignupForm() {
           <input
             type="checkbox"
             id="terms"
-            required
             className="mt-1 h-4 w-4 text-[#2d6a4f] focus:ring-forest-700 border-gray-300 rounded cursor-pointer"
           />
           <label htmlFor="terms" className="text-xs md:text-base text-gray-600 leading-tight">
