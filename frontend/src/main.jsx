@@ -16,26 +16,39 @@ import EarningPage from './Pages/EarningPage.jsx';
 import FarmerProfilePage from './Pages/FarmerProfilePage.jsx';
 import SignupPage from './Pages/SignupPage.jsx';
 import ProtectedRoute from './Components/ProtectedRoute.jsx';
+import UnauthorizedPage from './Pages/UnauthorizedPage.jsx';
+import { AuthProvider } from './context/AuthContext';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
+  <AuthProvider>
   <Routes >
     <Route path="/login" element={<LoginPage />} />
      <Route path="/signup" element={<SignupPage/>} />
-    <Route element={<ProtectedRoute/>}>
-   <Route path="/" element={<HomePage />} />
-    <Route path="/Vegetables" element={<VegetablePage />}/>
+     <Route path="/unauthorized" element={<UnauthorizedPage/>} />
+
+
+    <Route element={<ProtectedRoute allowedRoles={['farmer']}/>}>
     <Route path="/Product" element={<ProductPage/>} />
-     <Route path="/cart" element={<CartPage/>} />
       <Route path="/dashboard" element={<DashboardPage/>} />
+      <Route path="/earnings" element={<EarningPage/>} />
+        <Route path="/profile" element={<FarmerProfilePage/>} />
+         <Route path="/myproducts" element={<MyProductsPage/>} />
+      <Route path="/farmerorder" element={<FarmerOrderPage/>} />
+      </Route>
+
+
+      <Route element={<ProtectedRoute allowedRoles={['consumer']}/>}>
       <Route path="/Checkoutpage" element={<CheckoutPage/>} />
       <Route path="/confirmationpage" element={<ConfirmationPage/>} />
-      <Route path="/myproducts" element={<MyProductsPage/>} />
-      <Route path="/farmerorder" element={<FarmerOrderPage/>} />
        <Route path="/myorders" element={<CustomerOrderPage/>} />
-       <Route path="/earnings" element={<EarningPage/>} />
-        <Route path="/profile" element={<FarmerProfilePage/>} />
+       <Route path="/cart" element={<CartPage/>} />  
+     </Route>
+
+     <Route element={<ProtectedRoute allowedRoles={['consumer', 'farmer']}/>}>
+      <Route path="/" element={<HomePage />} />
      </Route>
    </Routes>
+   </AuthProvider>
   </BrowserRouter>,
 )

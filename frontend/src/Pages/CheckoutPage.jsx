@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate } from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CheckoutSteps from '../Components/CheckoutPage/CheckoutSteps';
 import DeliveryAddress from '../Components/CheckoutPage/DeliveryAddress';
 import DeliverySlot from '../Components/CheckoutPage/DeliverySlot';
 import OrderSummary from '../Components/CheckoutPage/OrderSummary';
+
 function CheckoutPage() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const cartData = location.state;
+   if (!cartData?.fromCart) {
+        return navigate('/cart') ;
+    }
     const [form, setForm] = useState({
         firstName: "",
         lastName: "",

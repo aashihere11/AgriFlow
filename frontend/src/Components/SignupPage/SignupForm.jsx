@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 export default function SignupForm() {
   const [role, setRole] = useState('consumer');
   const [error, setError] = useState("");
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",

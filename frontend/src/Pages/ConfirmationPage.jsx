@@ -1,10 +1,14 @@
 import React from 'react';
 import DoneIcon from '@mui/icons-material/Done';
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate } from "react-router-dom";
 
 function ConfirmationPage() {
     const navigate = useNavigate();
-    
+      const location = useLocation();
+    const cartData = location.state;
+   if (!cartData?.fromCheckout) {
+        return navigate('/cart') ;
+    }
     return (<>
         <div className='min-h-screen flex flex-col items-center justify-center bg-[#f4f7f4]'>
             <div className="check-circle w-30 h-30 rounded-full bg-[#2e8a48] flex items-center justify-center  mb-6 ">

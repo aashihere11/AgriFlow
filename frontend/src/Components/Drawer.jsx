@@ -10,25 +10,28 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 export default function TemporaryDrawer() {
     const [open, setOpen] = React.useState(false);
+    const { user } = useAuth();
+     const userRole = user?.role;
     const navigate = useNavigate();
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
 
-   
-
     const navItems = [
-        { path: "/dashboard", label: "Dashboard" },
-        { path: "/myproducts", label: "My Products" },
-        { path: "/farmer/orders", label: "Orders" },
-        { path: "/farmer/earnings", label: "Earnings" },
-        { path: "/profile", label: "Profile" },
-        { path: "/farmer/settings", label: "Settings" },
-        { path: "/", label: "Logout" }
+        { path: "/dashboard", label: "Dashboard", roles: ["farmer", "consumer"] },
+        { path: "/myproducts", label: "My Products" , roles: ["farmer"] },
+        { path: "/orders", label: "Orders", roles: ["consumer"] },
+        { path: "/farmer/earnings", label: "Earnings" , roles: ["farmer"] },
+        { path: "/profile", label: "Profile" , roles: ["farmer"] },
+        { path: "/farmer/settings", label: "Settings" , roles: ["farmer"] },
+        {path:"farmerorder", label:"orders",roles: ["farmer"] },
+        { path: "/", label: "Logout", roles: ["farmer", "consumer"] }
     ];
 
+    const filterdNavItems = navItems.filter((item) => item.roles.includes(userRole))
     const handleNavigate = (path) => {
         navigate(path);
         setOpen(false);
@@ -36,7 +39,7 @@ export default function TemporaryDrawer() {
     const DrawerList = (
         <Box className="min-h-screen bg-[#a8da8dd6] font-medium" sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} >
             <List>
-                {navItems.map((item) => (
+                {filterdNavItems.map((item) => (
                     <ListItem key={item.label} disablePadding>
                         <ListItemButton onClick={() => handleNavigate(item.path)}>
                             <ListItemIcon>

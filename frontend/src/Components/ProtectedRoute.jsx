@@ -1,30 +1,26 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 
-const ProtectedRoute = () => {
-    const [authenticated, setAuthenticated] = useState("false");
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        axios.get("http://localhost:3000/me", {
-            withCredentials: true,
-        })
-            .then(() => {
-                setAuthenticated(true);
-            })
-            .catch(() => {
-                setAuthenticated(false);
-            }).finally(() => {
-                setLoading(false);
-            })
-    }, [])
+const ProtectedRoute = ({allowedRoles}) => {
+const {user, loading} = useAuth();
 
     if (loading) {
         return <p>Loading...</p>;
     }
 
-    return authenticated ? <Outlet /> : <Navigate to="/login" />;
+    // A. Logged in nahi hai -> Login page par bhejo
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
+
+    // B. Logged in hai par Role match nahi karta -> Unauthorized page par bhejo
+    if (allowedRoles && !allowedRoles.includes(user?.role)) {
+        return <Navigate to="/unauthorized" replace />;
+    }
+
+    return <Outlet /> ;
 }
 
 export default ProtectedRoute;
