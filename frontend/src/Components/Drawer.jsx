@@ -26,8 +26,8 @@ export default function TemporaryDrawer() {
         { path: "/orders", label: "Orders", roles: ["consumer"] },
         { path: "/farmer/earnings", label: "Earnings" , roles: ["farmer"] },
         { path: "/profile", label: "Profile" , roles: ["farmer"] },
-        { path: "/farmer/settings", label: "Settings" , roles: ["farmer"] },
-        {path:"farmerorder", label:"orders",roles: ["farmer"] },
+         {path:"farmerorder", label:"orders",roles: ["farmer"] },
+        { path: "/farmer/settings", label: "Settings" , roles: ["farmer", "consumer"]  },
         { path: "/", label: "Logout", roles: ["farmer", "consumer"] }
     ];
 

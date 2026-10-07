@@ -31,7 +31,7 @@ createRoot(document.getElementById('root')).render(
     <Route element={<ProtectedRoute allowedRoles={['farmer']}/>}>
     <Route path="/Product" element={<ProductPage/>} />
       <Route path="/dashboard" element={<DashboardPage/>} />
-      <Route path="/earnings" element={<EarningPage/>} />
+      <Route path="/farmer/earnings" element={<EarningPage/>} />
         <Route path="/profile" element={<FarmerProfilePage/>} />
          <Route path="/myproducts" element={<MyProductsPage/>} />
       <Route path="/farmerorder" element={<FarmerOrderPage/>} />
