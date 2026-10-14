@@ -28,7 +28,7 @@ function AuthLoginSection() {
                     withCredentials: true
                 })
 
-            if (response.data.success) {
+            if (response.data && response.data.success) {
                 navigate("/");
             }
         } catch (error) {

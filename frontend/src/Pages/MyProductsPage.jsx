@@ -7,16 +7,26 @@ import { useNavigate } from 'react-router-dom';
 function MyProductsPage() {
   const initialForm = {
     name: "",
+    description: "",
+    stock: "",
     price: "",
     unit: "kg",
-    stock: "",
     category: "vegetables",
+    image: ""
   };
   const [form, setForm] = useState(initialForm);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState("add");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const navigate = useNavigate();
+
+  const isFormValid =
+    form.name &&
+    form.description &&
+    form.stock &&
+    form.price &&
+    form.image;
+
 
   return (<>
     <div className='min-h-screen bg-[#f4f7f4] '>
@@ -73,6 +83,7 @@ function MyProductsPage() {
         product={selectedProduct}
         isOpen={isModalOpen}
         setForm={setForm}
+        isFormValid={isFormValid}
         form={form}
         onClose={() => setIsModalOpen(false)} />
 
