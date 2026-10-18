@@ -1,8 +1,8 @@
 import React from 'react';
-function FarmerInfoCard() {
+function FarmerInfoCard({ product }) {
+    const name = product.farmer?.username || "Unknown farmer";
+    const firstLetter = name.charAt(0).toUpperCase();
     return (
-
-
         <div className="bg-white border border-gray-200 rounded-xl p-3">
             <p className="text-[10px] md:text-lg font-semibold tracking-widest text-gray-400 uppercase mb-3 m-0">
                 Sold by farmer
@@ -10,18 +10,18 @@ function FarmerInfoCard() {
 
             <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-[#f0faf2] border-2 border-[#a8e0b5] flex items-center justify-center text-base font-semibold text-[#2e8a48] flex-shrink-0">
-                    A
+                    {firstLetter}
                 </div>
                 <div>
                     <div className="flex items-center gap-2">
-                        <p className="text-sm md:text-lg font-medium text-gray-800 m-0">farmer.name</p>
+                        <p className="text-sm md:text-lg font-medium text-gray-800 m-0">{name}</p>
 
                         <span className="text-[10px] md:text-base text-[#2e8a48] bg-[#f0faf2] border border-[#a8e0b5] rounded-full px-2 py-0.5">
                             ✓ Verified
                         </span>
 
                     </div>
-                    <p className="text-xs md:text-base text-gray-400 mt-0.5 m-0">📍 farmer.location</p>
+                    <p className="text-xs md:text-base text-gray-400 mt-0.5 m-0">📍{product.farmer?.location || "Location unavailable"}</p>
                 </div>
             </div>
 

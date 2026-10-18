@@ -12,6 +12,7 @@ const ImageKit = require('@imagekit/nodejs');
 const multer = require("multer");
 const { toFile } = require("@imagekit/nodejs");
 const Product = require("./Models/Product.js");
+const mongoose = require("mongoose");
 
 
 dns.setServers([
@@ -94,6 +95,82 @@ app.post(
     }
   }
 );
+
+// GET similar products from the same category. This route must be before /products/:id.
+app.get('/products/:id/similar', async (req, res) => {
+  try {
+    const { id: productId } = req.params;
+
+    if (!mongoose.isValidObjectId(productId)) {
+      return res.status(400).json({ success: false, message: "Invalid product id" });
+    }
+
+    const product = await Product.findById(productId).select('category');
+
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    const products = await Product.find({
+      category: product.category,
+      _id: { $ne: product._id }
+    })
+      .populate('farmer', 'username location')
+      .limit(4);
+
+    return res.status(200).json({ success: true, products });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Unable to fetch similar products" });
+  }
+});
+
+// GET one product by id
+app.get('/products/:id', async (req, res) => {
+  try {
+    const { id: productId } = req.params;
+
+    if (!mongoose.isValidObjectId(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product id"
+      });
+    }
+
+    const product = await Product.findById(productId)
+      .populate('farmer', 'username location');
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product nahi mila!"
+      });
+    }
+    res.status(200).json({
+      success: true,
+      product
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Fetch all products from database
+app.get("/products", async (req, res) => {
+  try {
+    const products = await Product.find({}).populate('farmer', 'username location');
+    res.status(200).json({
+      success: true,
+      products
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
 
 app.post("/create-user", async (req, res) => {
   const { username, email, phone, password, role, location } = req.body;

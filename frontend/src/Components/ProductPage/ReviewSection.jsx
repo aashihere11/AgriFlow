@@ -12,7 +12,7 @@ function ReviewSection() {
     <div className="bg-white border border-gray-200 rounded-xl ">
 
       {/* HEADER */}
-      <p className="font-serif text-sm md:text-4xl font-medium text-gray-800 ">Customer Reviews</p>
+      <p className="font-serif text-sm md:text-4xl font-medium text-gray-800 p-3">Customer Reviews</p>
 
 
       <div className='flex items-center gap-3 justify-center'>

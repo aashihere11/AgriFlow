@@ -3,7 +3,6 @@ import './index.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './Pages/HomePage.jsx';
 import LoginPage from './Pages/LoginPage.jsx';
-import VegetablePage from './Pages/Vegetables.jsx';
 import ProductPage from './Pages/ProductPage.jsx';
 import CartPage from './Pages/CartPage.jsx';
 import DashboardPage from './Pages/DashboardPage.jsx';
@@ -29,7 +28,6 @@ createRoot(document.getElementById('root')).render(
 
 
     <Route element={<ProtectedRoute allowedRoles={['farmer']}/>}>
-    <Route path="/Product" element={<ProductPage/>} />
       <Route path="/dashboard" element={<DashboardPage/>} />
       <Route path="/farmer/earnings" element={<EarningPage/>} />
         <Route path="/profile" element={<FarmerProfilePage/>} />
@@ -46,6 +44,7 @@ createRoot(document.getElementById('root')).render(
      </Route>
 
      <Route element={<ProtectedRoute allowedRoles={['consumer', 'farmer']}/>}>
+      <Route path="/product/:id" element={<ProductPage />} />
       <Route path="/" element={<HomePage />} />
      </Route>
    </Routes>
