@@ -46,6 +46,40 @@ app.get("/me", authenticate, (req, res) => {
   });
 });
 
+// DELETE: Product ko ID ke base par delete karna
+app.delete('/product/delete/:id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+      return res.status(404).json({ success: false, message: "Product Not Found" });
+    }
+
+    res.status(200).json({ success: true, message: "Product successfully deleted  🗑️" });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.get('/farmer/:farmerId', authenticate, async (req, res) => {
+  try {
+    const { farmerId } = req.params;
+    
+    // Database se us farmer ke saare products dhoondo
+    const products = await Product.find({ farmer: farmerId });
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: "No products found for this farmer." });
+    }
+
+    res.status(200).json({ success: true, products });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.post(
   "/products/createproduct", authenticate, upload.single("image"),
   async (req, res) => {
@@ -97,7 +131,7 @@ app.post(
 );
 
 // GET similar products from the same category. This route must be before /products/:id.
-app.get('/products/:id/similar', async (req, res) => {
+app.get('/products/:id/similar', authenticate, async (req, res) => {
   try {
     const { id: productId } = req.params;
 

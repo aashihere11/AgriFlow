@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 function AuthLoginSection() {
     const navigate = useNavigate();
+    const { refreshUser } = useAuth();
     const [form, setForm] = useState({
         email: "",
         password: "",
@@ -29,7 +31,13 @@ function AuthLoginSection() {
                 })
 
             if (response.data && response.data.success) {
-                navigate("/");
+                const user = await refreshUser();
+
+                if (user) {
+                    navigate("/", { replace: true });
+                } else {
+                    setError("Your session could not be verified. Please try again.");
+                }
             }
         } catch (error) {
             setError(error.response?.data?.message || "Something went wrong");
@@ -48,7 +56,7 @@ function AuthLoginSection() {
                 </p>
                 <div>
                     {error && <p className='text-red-500 font-medium  text-xs md:text-base'>{error}</p>}
-                    <form >
+                    <form onSubmit={handleLogin}>
                         <div style={{ marginBottom: "16px" }}>
                             <label className=' w-full text-[#666] font-medium' >
                                 Email address</label>
@@ -74,7 +82,7 @@ function AuthLoginSection() {
                             style={{
                                 width: "30%", border: "none", borderRadius: "10px",
                             }}
-                            onClick={handleLogin}>
+                            >
                             Login
                         </button>
 

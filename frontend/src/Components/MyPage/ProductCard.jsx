@@ -1,25 +1,20 @@
 import React from 'react';
-
-const getFreshnessStatus = (updatedAt) => {
-  const hours = (Date.now() - new Date(updatedAt)) / (1000 * 60 * 60);
-  if (hours < 12) return { label: "fresh", class: "text-fresh" };
-  else if (hours < 24) return { label: "warning", class: "text-Update" };
-  return { label: "expired", class: "text-Expired" };
-
-};
+import axios from 'axios';
 
 const getStockLevel = (stock) => {
-  if (stock > 5) return "dot-Fresh";
-  if (stock <= 5) return "dot-Update";
+  if (stock > 10) return "dot-Fresh";
+  if (stock <= 10) return "dot-Update";
 
 };
 
-const getStockPct = (stock) => Math.min((stock / 20) * 100, 100);
+const getStockPct = (stock) => Math.min((stock / 500) * 100, 100);
 
-function ProductCard({ key, product, setMode, setSelectedProduct, setIsModalOpen, setForm }) {
+
+function ProductCard({ setFarmerProducts, farmerProducts, onClick, product, setMode,
+  setSelectedProduct, setIsModalOpen, setForm }) {
 
   const pct = getStockPct(product.stock);
-  const freshness = getFreshnessStatus(product.updatedAt);
+
 
   const handleEdit = (product) => {
     setMode("edit");
@@ -34,24 +29,34 @@ function ProductCard({ key, product, setMode, setSelectedProduct, setIsModalOpen
     });
   }
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("DO YOU REALLY WANT TO DELETE THE PRODUCT")) return;
+
+    try {
+      const response = await axios.delete(`http://localhost:3000/product/delete/${id}`, { withCredentials: true });
+      if (response.data.success) {
+        setFarmerProducts(farmerProducts.filter(p => p._id !== id));
+      }
+    } catch (error) {
+      console.error("deletion error", error);
+    }
+
+  }
   return (<>
-    <div className='bg-white border-2 border-gray-200 rounded-xl overflow-hidden '>
-      <div className='flex items-center text-5xl justify-center relative overflow-hidden ' >
-        <div className='p-2'>
-          <img src="media/wheat.jpg" alt="img" className='min-w-[70px] max-w-full ' />
-          <span className={`absolute top-3 left-3 text-[10px] font-medium px-2 py-1 rounded-full bg-white ${freshness.class} `}>
-            {freshness.label == "fresh" ? "🟢" : freshness.label == "warning" ? "🟠" : "🔴"} {freshness.label}</span>
-        </div>
+    <div className='bg-[#fcf8f2] border border-[#e5dec9] rounded-2xl p-3  transition-all duration-300 flex flex-col w-full max-w-[350px]
+  shadow-sm hover:shadow-md border border-gray-200/60 '>
+      <div className='w-full aspect-square rounded-xl overflow-hidden bg-white border border-[#e5dec9] shadow-inner mb-3 relative' onClick={onClick} >
+        <img src={product.image} alt="img" className="w-full h-full object-cover" />
       </div>
 
       {/* BODY */}
       <div className='mt-1 ml-3'>
-        <p className="text-sm md:text-base font-medium text-gray-800 m-0 ">{product.name}</p>
+        <p className="text-sm md:text-lg font-medium text-gray-800 m-0 ">{product.name}</p>
         <p className="text-xs md:text-base text-gray-400 mt-1 mb-2 m-0">₹{product.price}/{product.unit}</p>
 
-        <p className="text-xs font-medium mb-1 m-0 ">{product.stock == 0 ? "Out Of Stock" : `${product.stock} ${product.unit} left`}</p>
+        <p className="text-xs md:text-base font-medium mb-1 m-0 ">{product.stock == 0 ? "Out Of Stock" : `${product.stock} ${product.unit} left`}</p>
 
-        <div className="w-50 h-1 bg-gray-100 rounded-full overflow-hidden ">
+        <div className="w-50 h-1 bg-gray-400 rounded-full overflow-hidden ">
           <div className={`h-full rounded-full ${getStockLevel(product.stock)}`} style={{ width: `${pct}%` }}></div>
         </div>
       </div>
@@ -63,7 +68,8 @@ function ProductCard({ key, product, setMode, setSelectedProduct, setIsModalOpen
           onClick={() => handleEdit(product)}>
           ✏️ Edit
         </button>
-        <button className="py-1.5 px-2 !text-[10px] md:!text-xl text-[#e74c3c] bg-[#fff0ee] border border-[#f5c6c0] !rounded-lg hover:bg-[#ffe0db] transition-colors">
+        <button className="py-1.5 px-2 !text-[10px] md:!text-xl text-[#e74c3c] bg-[#fff0ee] border border-[#f5c6c0] !rounded-lg hover:bg-[#ffe0db] transition-colors"
+          onClick={() => handleDelete(product._id)}>
           🗑
         </button>
       </div>

@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductCard from '../Components/MyPage/ProductCard';
-import { products } from '../data/myproducts.js';
 import Modal from '../Components/MyPage/Modal.jsx';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import CircularProgress from '@mui/material/CircularProgress';
+import axios from 'axios';
+
 function MyProductsPage() {
   const initialForm = {
     name: "",
@@ -26,45 +29,77 @@ function MyProductsPage() {
     form.stock &&
     form.price &&
     form.image;
+  const [farmerProducts, setFarmerProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const user = useAuth();
+  const farmerId = user.user._id;
+
+  useEffect(() => {
+    const fetchFarmerProducts = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/farmer/${farmerId}`, { withCredentials: true });
+
+        if (response.data.success) {
+          setFarmerProducts(response.data.products);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (farmerId) {
+      fetchFarmerProducts();
+    }
+  }, [farmerId]);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress size="3rem" aria-label="Loading…" sx={{ color: '#165b07' }} />
+      </div>
+    );
+  }
 
 
   return (<>
     <div className='min-h-screen bg-[#f4f7f4] '>
 
       {/* TOP BAR */}
-      <div className="flex items-center justify-between bg-white  ">
-        <div className='flex items-center gap-3 min-w-0 max-w-50 px-3 '>
-          <button onClick={() => navigate(-1)} className='!text-sm md:!text-base text-nowrap'><ArrowBackIcon />Back</button>
-          <img src="media/logo.png" alt="img" />
+      <div className="bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7] flex items-center justify-between
+       px-2 bg-white border-b border-gray-100 sticky top-0 z-10 h-30 ">
+        <div>
+          <img src="media/logo.png" alt="img" className='w-70 h-auto' />
         </div>
-
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-2 py-2 bg-[#2e8a48] text-white !text-sm md:!text-lg font-medium !rounded-lg hover:bg-[#1a5c2e] transition-colors">
+          className="flex items-center gap-2 px-2 py-2  bg-[#2e8a48] text-white !text-xs md:!text-lg font-medium !rounded-lg hover:bg-[#1a5c2e] transition-colors">
           ➕ Add product
         </button>
       </div>
 
-      <p className="font-serif text-base md:text-4xl text-[#1a5c2e] px-5 pt-3 m-0">My Products</p>
 
       {/* PRODUCT GRID */}
       <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3'>
-        {products.map((product) =>
+        {farmerProducts.map((product) =>
         (<ProductCard
-          key={product.id}
+          onClick={() => navigate(`/product/${product._id}`)}
+          key={product._id}
           product={product}
           setMode={setMode}
           setSelectedProduct={setSelectedProduct}
           setIsModalOpen={setIsModalOpen}
           setForm={setForm}
+          setFarmerProducts={setFarmerProducts}
+          farmerProducts={farmerProducts}
         />
 
         ))}
 
         {/* ADD CARD */}
-        <div className="bg-white border-2 border-dashed border-gray-300 
-        rounded-xl min-h-[200px] flex flex-col items-center justify-center
-         gap-2 cursor-pointer hover:border-[#5cba78]  transition-all">
+        <div className="flex items-center justify-center bg-[#fcf8f2] border border-[#e5dec9] rounded-2xl p-3  transition-all duration-300 flex flex-col w-full max-w-[350px]
+  shadow-sm hover:shadow-md border border-gray-200/60">
           <div className="w-10 h-10 rounded-full bg-[#f0faf2] border 
           border-[#a8e0b5] flex items-center justify-center text-xl"
             onClick={() => {
