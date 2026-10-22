@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import axios from "axios";
 
-function Modal({ mode, product, isOpen, onClose, setForm, form, isFormValid }) {
+function Modal({ mode, isOpen, onClose, setForm, form, isFormValid, setFarmerProducts, loading, setLoading}) {
 
     const handleChange = (e) => {
         if (e.target.type === "file") {
@@ -26,10 +26,17 @@ function Modal({ mode, product, isOpen, onClose, setForm, form, isFormValid }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const response = await axios.post("http://localhost:3000/products/createproduct", formData, { withCredentials: true });
+
             if (response.data && response.data.success) {
+                setFarmerProducts((previousProducts) => [
+                    ...previousProducts,
+                    response.data.product,
+                ]);
                 onClose();
+                setLoading(false);
             }
 
         } catch (error) {
@@ -139,7 +146,7 @@ function Modal({ mode, product, isOpen, onClose, setForm, form, isFormValid }) {
                                     ? form.image // Agar Cloudinary se aayi hui image URL hai (Edit mode)
                                     : URL.createObjectURL(form.image) // Agar raw input file upload ki hai
                             }
-                            className="w-50 h-50 object-cover rounded-lg"
+                            className="max-w-50 object-cover rounded-lg"
                             alt="preview"
                         />)}
                 </div>

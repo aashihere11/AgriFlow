@@ -46,7 +46,10 @@ app.get("/me", authenticate, (req, res) => {
   });
 });
 
-// DELETE: Product ko ID ke base par delete karna
+
+
+
+
 app.delete('/product/delete/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -55,6 +58,10 @@ app.delete('/product/delete/:id', authenticate, async (req, res) => {
 
     if (!deletedProduct) {
       return res.status(404).json({ success: false, message: "Product Not Found" });
+    }
+
+    if (deletedProduct.image && deletedProduct.image.fileId) {
+      await imagekit.files.delete(deletedProduct.image.fileId);
     }
 
     res.status(200).json({ success: true, message: "Product successfully deleted  🗑️" });
@@ -66,11 +73,12 @@ app.delete('/product/delete/:id', authenticate, async (req, res) => {
 app.get('/farmer/:farmerId', authenticate, async (req, res) => {
   try {
     const { farmerId } = req.params;
-    
+
     // Database se us farmer ke saare products dhoondo
     const products = await Product.find({ farmer: farmerId });
 
     if (!products || products.length === 0) {
+      Ima
       return res.status(404).json({ message: "No products found for this farmer." });
     }
 
@@ -110,10 +118,13 @@ app.post(
         category,
         stock,
         unit,
-        image: imageResult.url,
+        image: {
+          url: imageResult.url,
+          fileId: imageResult.fileId
+        },
         farmer: req.user._id,
       });
-
+          
       return res.status(201).json({
         success: true,
         message: "Product created successfully",

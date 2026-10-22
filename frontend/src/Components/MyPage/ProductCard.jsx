@@ -26,6 +26,7 @@ function ProductCard({ setFarmerProducts, farmerProducts, onClick, product, setM
       unit: product.unit,
       stock: product.stock,
       category: product.category,
+      image: product.image
     });
   }
 
@@ -46,7 +47,7 @@ function ProductCard({ setFarmerProducts, farmerProducts, onClick, product, setM
     <div className='bg-[#fcf8f2] border border-[#e5dec9] rounded-2xl p-3  transition-all duration-300 flex flex-col w-full max-w-[350px]
   shadow-sm hover:shadow-md border border-gray-200/60 '>
       <div className='w-full aspect-square rounded-xl overflow-hidden bg-white border border-[#e5dec9] shadow-inner mb-3 relative' onClick={onClick} >
-        <img src={product.image} alt="img" className="w-full h-full object-cover" />
+        <img src={product.image.url} alt="img" className="w-full h-full object-cover" />
       </div>
 
       {/* BODY */}
@@ -56,7 +57,7 @@ function ProductCard({ setFarmerProducts, farmerProducts, onClick, product, setM
 
         <p className="text-xs md:text-base font-medium mb-1 m-0 ">{product.stock == 0 ? "Out Of Stock" : `${product.stock} ${product.unit} left`}</p>
 
-        <div className="w-50 h-1 bg-gray-400 rounded-full overflow-hidden ">
+        <div className=" w-30 md:w-60 h-1 bg-gray-400 rounded-full overflow-hidden ">
           <div className={`h-full rounded-full ${getStockLevel(product.stock)}`} style={{ width: `${pct}%` }}></div>
         </div>
       </div>

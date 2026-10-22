@@ -28,8 +28,8 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     image: {
-      type: String, // Yahan ImageKit ka `result.url` save hota hai
-      required: true,
+      url: { type: String, required: true },
+      fileId: { type: String, required: true }
     },
     farmer: {
       type: mongoose.Schema.Types.ObjectId,
@@ -40,4 +40,4 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports =  productSchema;
+module.exports = productSchema;

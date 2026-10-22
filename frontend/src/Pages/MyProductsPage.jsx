@@ -29,6 +29,7 @@ function MyProductsPage() {
     form.stock &&
     form.price &&
     form.image;
+    
   const [farmerProducts, setFarmerProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = useAuth();
@@ -72,11 +73,7 @@ function MyProductsPage() {
         <div>
           <img src="media/logo.png" alt="img" className='w-70 h-auto' />
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-2 py-2  bg-[#2e8a48] text-white !text-xs md:!text-lg font-medium !rounded-lg hover:bg-[#1a5c2e] transition-colors">
-          ➕ Add product
-        </button>
+        
       </div>
 
 
@@ -120,7 +117,11 @@ function MyProductsPage() {
         setForm={setForm}
         isFormValid={isFormValid}
         form={form}
-        onClose={() => setIsModalOpen(false)} />
+        onClose={() => setIsModalOpen(false)}
+         setFarmerProducts={setFarmerProducts}
+          farmerProducts={farmerProducts}
+          loading={loading}
+          setLoading={setLoading} />
 
     </div>
   </>)
