@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axios from "axios";
 
-function Modal({ mode, isOpen, onClose, setForm, form, isFormValid, setFarmerProducts, loading, setLoading}) {
+function Modal({ mode, isOpen, onClose, setForm, form, isFormValid, setFarmerProducts, setLoading }) {
 
     const handleChange = (e) => {
         if (e.target.type === "file") {
@@ -15,18 +15,27 @@ function Modal({ mode, isOpen, onClose, setForm, form, isFormValid, setFarmerPro
         }
     };
 
-    const formData = new FormData();
-    formData.append("name", form.name);
-    formData.append("description", form.description);
-    formData.append("stock", form.stock);
-    formData.append("unit", form.unit);
-    formData.append("price", form.price);
-    formData.append("category", form.category);
-    formData.append("image", form.image);
 
-    const handleSubmit = async (e) => {
+
+    const handleFormSubmit = (e) => {
         e.preventDefault();
+
+        if (mode === "add") {
+            handleSubmit(e);
+        } else {
+            handleUpdate(e);
+        }
+    }
+    const handleSubmit = async () => {
         setLoading(true);
+        const formData = new FormData();
+        formData.append("name", form.name);
+        formData.append("description", form.description);
+        formData.append("stock", form.stock);
+        formData.append("unit", form.unit);
+        formData.append("price", form.price);
+        formData.append("category", form.category);
+        formData.append("image", form.image);
         try {
             const response = await axios.post("http://localhost:3000/products/createproduct", formData, { withCredentials: true });
 
@@ -41,8 +50,42 @@ function Modal({ mode, isOpen, onClose, setForm, form, isFormValid, setFarmerPro
 
         } catch (error) {
             console.log(error);
+            alert(error);
         }
     }
+
+    const handleUpdate = async () => {
+        setLoading(true);
+        const formData = new FormData();
+        formData.append("name", form.name);
+        formData.append("description", form.description);
+        formData.append("stock", form.stock);
+        formData.append("unit", form.unit);
+        formData.append("price", form.price);
+        formData.append("category", form.category);
+
+        if (form.image && typeof form.image !== "string") {
+            formData.append("image", form.image);
+        }
+       
+        try {
+            const response = await axios.patch(`http://localhost:3000/product/edit/${form._id}`, formData, { withCredentials: true });
+
+
+            if (response.data.success) {
+                alert(response.data.message);
+                setFarmerProducts((previousProducts) =>
+                    previousProducts.map((p) => (p._id === form._id ? response.data.updatedProduct : p))
+                );
+                setLoading(false);
+                onClose();
+
+            }
+        } catch (error) {
+            console.error("eroor in updation:", error);
+            onClose();
+        }
+    };
 
     if (!isOpen) return null;
     return (
@@ -159,7 +202,7 @@ function Modal({ mode, isOpen, onClose, setForm, form, isFormValid, setFarmerPro
                     </button>
                     <button
                         disabled={!isFormValid}
-                        onClick={handleSubmit}
+                        onClick={handleFormSubmit}
                         className="flex-1 py-2.5 !text-sm md:!text-base font-medium text-white bg-[#2e8a48] rounded-lg 
                         hover:bg-[#1a5c2e] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                         Add Product

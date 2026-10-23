@@ -11,7 +11,7 @@ export default function MediaCard({ product, onClick }) {
       {/* IMAGE CONTAINER - aspect-square se image bilkul crop nahi hogi aur poori dikhegi */}
       <div className="w-full aspect-square rounded-xl overflow-hidden bg-white border border-[#e5dec9] shadow-inner mb-3">
         <img 
-          src={product.image} 
+          src={product.image.url} 
           alt={product.name} 
           className="w-full h-full object-cover" 
         />

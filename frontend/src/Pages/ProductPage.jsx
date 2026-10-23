@@ -91,7 +91,7 @@ function ProductPage() {
 
                 <div className='flex flex-col gap-3 shrink rounded-2xl flex items-center '>
                     <div className='flex shrink justify-center place-items-center border-2 border-[#eaf3de]  rounded-xl   bg-white' >
-                        <img className="object-contain p-3" src={product.image} alt="img" />
+                        <img className="object-contain p-3" src={product.image.url} alt="img" />
                     </div>
 
                     <div className="flex gap-1 flex-wrap items-center">

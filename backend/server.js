@@ -50,6 +50,64 @@ app.get("/me", authenticate, (req, res) => {
 
 
 
+app.patch('/product/edit/:id', authenticate, upload.single("image"), async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existingProduct = await Product.findById(id);
+    if (!existingProduct) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    const updateData = {
+      name: req.body.name,
+      description: req.body.description,
+      stock: req.body.stock,
+      unit: req.body.unit,
+      price: req.body.price,
+      category: req.body.category,
+    };
+
+    if (req.file) {
+
+      const uploadResponse = await imagekit.files.upload({
+        file: await toFile(req.file.buffer, req.file.originalname),
+        fileName: req.file.originalname,
+        folder: "/products",
+        useUniqueFileName: true,
+      });
+
+      updateData.image = {
+        url: uploadResponse.url,
+        fileId: uploadResponse.fileId
+      }
+
+      if (existingProduct.image.url && existingProduct.image.fileId) {
+        await imagekit.files.delete(existingProduct.image.fileId);
+      }
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      updateData,
+      { returnDocument: 'after' }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ success: false, message: "Product nahi mila!" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product successfully updated ✨",
+      updatedProduct
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
 app.delete('/product/delete/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -124,7 +182,7 @@ app.post(
         },
         farmer: req.user._id,
       });
-          
+
       return res.status(201).json({
         success: true,
         message: "Product created successfully",

@@ -21,12 +21,14 @@ function ProductCard({ setFarmerProducts, farmerProducts, onClick, product, setM
     setSelectedProduct(product);
     setIsModalOpen(true);
     setForm({
+      _id:product._id,
       name: product.name,
+      description: product.description,
       price: product.price,
       unit: product.unit,
       stock: product.stock,
       category: product.category,
-      image: product.image
+      image: product.image.url
     });
   }
 
