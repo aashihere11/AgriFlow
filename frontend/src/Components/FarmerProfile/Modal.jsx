@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-function Modal({ title, isOpen, onClose, children }) {
-    
+function Modal({ title, isOpen, onClose, children, onSave, isValid, error }) {
+    console.log(isValid);
+
     if (!isOpen) return null;
     return (
         <div className='fixed inset-0 bg-black/50 z-50'
@@ -9,6 +9,7 @@ function Modal({ title, isOpen, onClose, children }) {
                 style={{ transform: "translate(-50%, -50%)", animation: "modalIn 0.5s ease forwards" }}
                 onClick={(e) => e.stopPropagation()}>
                 <p className="font-serif text-xs md:text-4xl text-[#1a5c2e] mb-4 text-nowrap">{title}</p>
+                <p className="font-serif text-xs  text-red-600 mb-4 text-nowrap">{error}</p>
                 {children}
 
                 <div className="flex gap-3">
@@ -18,13 +19,21 @@ function Modal({ title, isOpen, onClose, children }) {
                         Cancel
                     </button>
                     <button
-                        className="px-2 py-1 !text-xs md:!text-base  font-medium text-white bg-[#2e8a48] border border-gray-200  !rounded-lg hover:bg-[#1a5c2e] transition-colors ">
-                        Save Details
-                    </button>
-                </div>
+                        className={`px-2 py-1 !text-xs md:!text-base  font-medium text-white  border border-gray-200
+                          !rounded-lg 
+                           ${!isValid
+                        ? "bg-gray-300 cursor-not-allowed border-gray-300"
+                        : "bg-[#2e8a48] hover:bg-[#1a5c2e]"
+                    }`} 
 
+                    disabled={!isValid}
+                    onClick={onSave}>
+                    Save Details
+                </button>
             </div>
+
         </div>
+        </div >
     );
 }
 

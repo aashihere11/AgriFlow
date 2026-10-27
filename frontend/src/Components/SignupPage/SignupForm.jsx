@@ -4,12 +4,14 @@ import InputField from './InputField';
 import SocialButtons from './SocialButtons';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../context/AuthContext';
 
 
 export default function SignupForm() {
   const [role, setRole] = useState('consumer');
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -25,12 +27,19 @@ export default function SignupForm() {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    
+
+    setError("");
     try{
-      await axios.post("http://localhost:3000/create-user",{ ...formData, role }, {withCredentials:true});
-       if (response.data.success) {
-                navigate("/");
-            }
+      const response = await axios.post(
+        "http://localhost:3000/create-user",
+        { ...formData, role },
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        await refreshUser();
+        navigate("/", { replace: true });
+      }
     }catch(error){
      setError(error.response?.data?.message || "Something went wrong");
     }

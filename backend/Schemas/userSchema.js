@@ -5,29 +5,25 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { 
-    type: String, 
-    enum: ['farmer', 'consumer'], 
-    default: 'consumer' 
+  role: {
+    type: String,
+    enum: ['farmer', 'consumer'],
+    default: 'consumer'
   },
   phone: { type: String },
-  location: { type: String },
+  location: { type: String},
 
-  // Farmer Specific Details (Optional)
-  farmDetails: {
-    farmSize: { type: String },       // e.g., "5 Acres"
-    cropsGrown: [{ type: String }],   // e.g., ["Wheat", "Rice"]
-    farmAddress: { type: String }
-  },
 
-  // Bank / Payout Details for Farmers (Optional)
-  bankDetails: {
-    accountHolderName: { type: String },
-    accountNumber: { type: String },
-    ifscCode: { type: String },
-    bankName: { type: String },
-    upiId: { type: String }           // Quick payouts ke liye
-  }
+  isProfileComplete: { type: Boolean, default: false },
+  hasSeenWelcomeModal: { type: Boolean, default: false },
+
+  // Bank details are completed later from the farmer profile. Keep the fields
+  // present on every new user instead of leaving them undefined.
+  bankName: { type: String, default: "" },
+  accountNumber: { type: String, default: "" },
+  ifscCode: { type: String, default: "" },
+  upiId: { type: String, default: "" },
+
 }, { timestamps: true });
 
 

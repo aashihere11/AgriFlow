@@ -6,6 +6,8 @@ import { stats, categories, featuredProducts, whyCards } from '../data/Homedata'
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import FirstTimeWelcomeModal from '../Components/FirstTimeWelcomeModal';
+import { useAuth } from '../context/AuthContext';
 
 
 
@@ -13,9 +15,31 @@ function HomePage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const navigate = useNavigate();
+  const {user, setUser} = useAuth();
 
-  
+  useEffect(() => {
+
+    if (user && user.role === 'farmer' && user.hasSeenWelcomeModal === false) {
+      setShowWelcomeModal(true); 
+    }
+  }, [user]);
+
+  const handleCloseModal = async () => {
+    setShowWelcomeModal(false);// Modal hatao
+    try {
+
+      const response = await axios.patch("http://localhost:3000/users/update-welcome-status", {}, { withCredentials: true });
+      if(response.data.success){
+        setUser(response.data.user);
+        console.log(user);
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -40,8 +64,11 @@ function HomePage() {
   return (
     <>
       <div className=' min-h-screen'>
+        <FirstTimeWelcomeModal showWelcomeModal={showWelcomeModal}
+          handleCloseModal={handleCloseModal} />
         <Navbar />
         <HeroBanner />
+
 
         {/* STATS */}
         <div className="fadeUp flex justify-center gap-5  py-5 border-b border-gray-100 flex-wrap reveal  overflow-x-auto  snap-mandatory snap-x ">

@@ -36,17 +36,108 @@ app.use(cors({
   origin: "http://localhost:5173",
   credentials: true
 }));
+
 app.use(cookieParser());
 app.use(express.json());
 
 
-app.get("/me", authenticate, (req, res) => {
-  res.json({
-    user: req.user
-  });
+app.patch("/update/personal-info", authenticate, async (req, res) => {
+  try {
+    const userId = req.user._id;
+  
+    const [existingEmail, existingUsername] = await Promise.all([
+      User.findOne({ email: req.body.email, _id: { $ne: userId } }),    
+      User.findOne({ username: req.body.username, _id: { $ne: userId } })    
+    ]);
+
+   
+    if (existingEmail) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "This email is already registered by another user!" 
+      });
+    }
+
+    if (existingUsername) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "This username is already taken!" 
+      });
+    }
+
+   const { location, bankName, accountNumber, ifsc, upi } = req.body;
+    
+   const isComplete = Boolean(location && bankName && accountNumber && ifsc && upi);
+    const updatedData = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          ...req.body,
+          isProfileComplete: isComplete
+        }
+      },
+      { returnDocument: 'after' , runValidators: true }
+    ).select("-password");
+
+    if (!updatedData) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedData
+    });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+app.get("/me", authenticate, async (req, res) => {
+  try {
+
+    const user = await User.findById(req.user._id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+
 });
 
 
+app.patch("/users/update-welcome-status", authenticate, async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { hasSeenWelcomeModal: true },
+      { returnDocument: 'after' }
+    ).select("-password");
+
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Welcome status updated successfully",
+      user
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+})
 
 
 
@@ -276,20 +367,27 @@ app.get("/products", async (req, res) => {
 });
 
 app.post("/create-user", async (req, res) => {
-  const { username, email, phone, password, role, location } = req.body;
-  const user = await User.findOne({ username });
-  const existingemail = await User.findOne({ email });
-  if (!email || !username || !phone || !password) {
-    return res.status(400).json({
-      success: false,
-      message: "All fields are required"
-    });
-  }
-  if (!/\S+@\S+\.\S+/.test(email)) {
-    return res.status(400).json({
-      success: false,
-      message: "Please enter a valid email"
-    });
+  try {
+    const username = req.body.username?.trim();
+    const email = req.body.email?.trim().toLowerCase();
+    const phone = String(req.body.phone ?? "").trim();
+    const password = req.body.password;
+    const role = req.body.role;
+    const location = req.body.location?.trim() || "";
+
+    if (!email || !username || !phone || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required"
+      });
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid email"
+      });
+    }
 
     if (!/^\d{10}$/.test(phone)) {
       return res.status(400).json({
@@ -297,23 +395,10 @@ app.post("/create-user", async (req, res) => {
         message: "Phone number must be 10 digits"
       });
     }
-  }
-  if (user) {
-    return res.status(409).json({
-      success: false,
-      message: "Username already exists"
-    });
-  }
 
-  if (existingemail) {
-    return res.status(409).json({
-      success: false,
-      message: "email already exists"
-    });
-  }
+   
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       username,
       email,
@@ -344,8 +429,23 @@ app.post("/create-user", async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({
-      message: error.message
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: "Username or email already exists"
+      });
+    }
+
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to create account"
     });
   }
 });

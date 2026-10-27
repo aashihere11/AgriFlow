@@ -1,8 +1,7 @@
 import React from 'react';
 function ProfileCard({ title, rows, onEdit }) {
     return (
-        <div className="bg-white border border-gray-200 rounded-xl p-3 mb-4 shadow-xl"
-            style={{ background: "linear-gradient(135deg, #e8f4fd, #fff)" }}>
+        <div className="bg-white border border-gray-200 rounded-xl p-3 mb-4 shadow-xl">
 
             <div className="flex items-center justify-between mb-3">
                 <p className="text-xs md:text-xl font-medium text-gray-800 m-0">{title}</p>
