@@ -44,30 +44,31 @@ app.use(express.json());
 app.patch("/update/personal-info", authenticate, async (req, res) => {
   try {
     const userId = req.user._id;
-  
+
     const [existingEmail, existingUsername] = await Promise.all([
-      User.findOne({ email: req.body.email, _id: { $ne: userId } }),    
-      User.findOne({ username: req.body.username, _id: { $ne: userId } })    
+      User.findOne({ email: req.body.email, _id: { $ne: userId } }),
+      User.findOne({ username: req.body.username, _id: { $ne: userId } })
     ]);
 
-   
+
     if (existingEmail) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "This email is already registered by another user!" 
+      return res.status(400).json({
+        success: false,
+        message: "This email is already registered by another user!"
       });
     }
 
     if (existingUsername) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "This username is already taken!" 
+      return res.status(400).json({
+        success: false,
+        message: "This username is already taken!"
       });
     }
 
-   const { location, bankName, accountNumber, ifsc, upi } = req.body;
-    
-   const isComplete = Boolean(location && bankName && accountNumber && ifsc && upi);
+    const { bankName, accountNumber, ifscCode, upiId, accountHolderName } = req.body;
+
+    const isComplete = Boolean(bankName && accountNumber && ifscCode && upiId && accountHolderName);
+
     const updatedData = await User.findByIdAndUpdate(
       userId,
       {
@@ -76,7 +77,7 @@ app.patch("/update/personal-info", authenticate, async (req, res) => {
           isProfileComplete: isComplete
         }
       },
-      { returnDocument: 'after' , runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     ).select("-password");
 
     if (!updatedData) {
@@ -396,7 +397,7 @@ app.post("/create-user", async (req, res) => {
       });
     }
 
-   
+
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({

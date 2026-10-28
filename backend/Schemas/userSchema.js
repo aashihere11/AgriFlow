@@ -11,20 +11,18 @@ const userSchema = new mongoose.Schema({
     default: 'consumer'
   },
   phone: { type: String },
-  location: { type: String},
+  location: { type: String },
 
 
   isProfileComplete: { type: Boolean, default: false },
   hasSeenWelcomeModal: { type: Boolean, default: false },
+    bankName: { type: String, default: "" },
+    accountHolderName: { type: String, default: "" },
+    accountNumber: { type: String, default: "" },
+    ifscCode: { type: String, default: "" },
+    upiId: { type: String, default: "" },
 
-  // Bank details are completed later from the farmer profile. Keep the fields
-  // present on every new user instead of leaving them undefined.
-  bankName: { type: String, default: "" },
-  accountNumber: { type: String, default: "" },
-  ifscCode: { type: String, default: "" },
-  upiId: { type: String, default: "" },
-
-}, { timestamps: true });
+  }, { timestamps: true });
 
 
 module.exports = userSchema;

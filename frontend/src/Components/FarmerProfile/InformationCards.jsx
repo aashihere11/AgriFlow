@@ -19,8 +19,8 @@ function InformationCards({ modalOpen, user }) {
                 rows={[
                     { icon: "🏦", label: "Bank name", value: user.bankName || ""},
                     { icon: "💳", label: "Account number", value: user.accountNumber || "" },
-                    { icon: "🔢", label: "IFSC code", value: user.ifsc || "" },
-                    { icon: "📱", label: "UPI ID", value: user.upi || "" },
+                    { icon: "🔢", label: "IFSC code", value: user.ifscCode || "" },
+                    { icon: "📱", label: "UPI ID", value: user.upiId || "" },
                 ]}
                 onEdit={() => modalOpen("bank")} />
         </div>

@@ -1,5 +1,5 @@
 function Modal({ title, isOpen, onClose, children, onSave, isValid, error }) {
-    console.log(isValid);
+   
 
     if (!isOpen) return null;
     return (

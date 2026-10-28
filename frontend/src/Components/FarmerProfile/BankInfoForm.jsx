@@ -4,9 +4,10 @@ function BankInfoForm({ data, onChange }) {
     // BankForm
     const fields = [
         { name: "bankName", label: "Bank Name", type: "text" },
+        { name: "accountHolderName", label: "Account Holder Name", type: "text" },
         { name: "accountNumber", label: "Account Number", type: "text" },
-        { name: "ifsc", label: "IFSC", type: "text" },
-        { name: "upi", label: "UPI", typ: "text" },
+        { name: "ifscCode", label: "IFSC", type: "text" },
+        { name: "upiId", label: "UPI", typ: "text" },
     ];
     return (
         <>

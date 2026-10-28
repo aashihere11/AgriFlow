@@ -39,6 +39,7 @@ function FarmerProfilePage() {
 
     // bank
     bankName: user.bankName || "",
+    accountHolderName: user.accountHolderName || "",
     accountNumber: user.accountNumber || "",
     ifscCode: user.ifscCode || "",
     upiId: user.upiId || "",
@@ -52,22 +53,25 @@ function FarmerProfilePage() {
         email: user.email || "",
         location: user.location || "",
         bankName: user.bankName || "",
+        accountHolderName: user.accountHolderName || "",
         accountNumber: user.accountNumber || "",
         ifscCode: user.ifscCode || "",
         upiId: user.upiId || "",
       });
     }
   }, [user]);
+ 
 
   const isValid = modalType === "personal"
     ? (form.username?.trim() && form.phone?.trim() && form.email?.trim() && form.location?.trim())
     : modalType === "bank"
-      ? (form.ifscCode?.trim() && form.accountNumber?.trim() && form.bankName?.trim() && form.upiId?.trim())
+      ? (form.ifscCode?.trim() && form.accountNumber?.trim() && form.bankName?.trim() && form.upiId?.trim()) && form.accountHolderName?.trim() 
       : false;
 
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    console.log(form);
     setError("");
   };
 
