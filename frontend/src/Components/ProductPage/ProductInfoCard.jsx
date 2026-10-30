@@ -1,7 +1,10 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from "react-router-dom";
 
-function ProductInfoCard({ qty, onQtyChange, product }) {
+
+
+function ProductInfoCard({ qty, onQtyChange, product, addToCart }) {
   const formatPrice = (amount) => new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
@@ -11,12 +14,33 @@ function ProductInfoCard({ qty, onQtyChange, product }) {
   const total = (Number(product.price) || 0) * qty;
   const availableStock = Math.max(0, Number(product.stock) || 0);
   const isOutOfStock = availableStock === 0;
+  const navigate = useNavigate();
 
   const user = useAuth();
   const role = user.user.role;
 
+  const handleBuyNow = () => {
+  const directItem = [{ 
+    product: {
+      _id: product._id,
+      name: product.name,
+      image: product.image,
+      unit: product.unit
+    },
+    quantity: qty,
+    price: product.price
+  }];
 
-  return (
+  navigate('/Checkoutpage', {
+    state: {
+      checkoutItems: directItem, 
+      isDirectBuy: true
+    }
+  });
+};
+
+  return (<>
+
     <div className="bg-white border border-gray-200 rounded-xl p-3">
       <h1 className="font-serif text-base md:text-2xl text-[#1a5c2e] mb-1">{product.name}</h1>
 
@@ -60,16 +84,19 @@ function ProductInfoCard({ qty, onQtyChange, product }) {
         <button
           type="button"
           disabled={isOutOfStock}
-          className="w-full py-3 bg-[#2e8a48] hover:bg-[#1a5c2e] text-white text-sm font-medium rounded-xl transition-colors mt-3 disabled:cursor-not-allowed disabled:opacity-50"
-        >
+          className="w-full py-3 bg-[#2e8a48] hover:bg-[#1a5c2e] text-white text-sm font-medium rounded-xl transition-colors
+           mt-3 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={() => addToCart(product._id, qty)} >
           Add to Cart 🛒
         </button>)}
       {role !== 'farmer' && (
-        <button className="w-full py-2.5 bg-transparent border border-gray-200 text-gray-500 text-sm rounded-xl mt-2 hover:bg-gray-50 transition-colors">
-          Save for Later
+        <button className="w-full py-2.5 bg-transparent border hover:bg-[#1a5c2e] border-gray-200 text-gray-500 text-sm rounded-xl mt-2  transition-colors"
+          onClick={handleBuyNow}>
+          Buy Now
         </button>)}
 
-    </div>
+    </div >
+  </>
   );
 }
 

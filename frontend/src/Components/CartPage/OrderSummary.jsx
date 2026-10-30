@@ -3,8 +3,19 @@ import { useNavigate } from 'react-router-dom';
 function OrderSummary({ Items, checkedIds }) {
   const [promo, setPromo] = useState("");
   const navigate = useNavigate();
-  const selectedItems = Items.filter(item => checkedIds.includes(item.id));
-  const subtotal = selectedItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const selectedItems = Items.filter(item => checkedIds.includes(item.product._id));
+  const subtotal = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const handleProceedToCheckout = () => {
+    
+    const selectedCartItems = Items.filter(item => 
+      checkedIds.includes(item.product._id)
+    );
+
+    navigate('/Checkoutpage', { 
+      state: { checkoutItems: selectedCartItems, fromCart: true } 
+    });
+  };
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-3 h-full sticky top-20">
       <p className="text-sm md:text-4xl font-serif font-medium text-gray-800 mb-4 m-0">Order summary</p>
@@ -44,7 +55,7 @@ function OrderSummary({ Items, checkedIds }) {
       </div>
 
       <button
-        onClick={() => navigate('/Checkoutpage', { state: { fromCart: true } })}
+        onClick={handleProceedToCheckout}
         disabled={selectedItems.length === 0}
         className="w-full py-3 bg-[#2e8a48] hover:bg-[#1a5c2e] text-white text-sm font-medium rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         Proceed to checkout →

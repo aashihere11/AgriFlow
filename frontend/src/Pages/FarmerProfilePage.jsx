@@ -60,12 +60,12 @@ function FarmerProfilePage() {
       });
     }
   }, [user]);
- 
+
 
   const isValid = modalType === "personal"
     ? (form.username?.trim() && form.phone?.trim() && form.email?.trim() && form.location?.trim())
     : modalType === "bank"
-      ? (form.ifscCode?.trim() && form.accountNumber?.trim() && form.bankName?.trim() && form.upiId?.trim()) && form.accountHolderName?.trim() 
+      ? (form.ifscCode?.trim() && form.accountNumber?.trim() && form.bankName?.trim() && form.upiId?.trim()) && form.accountHolderName?.trim()
       : false;
 
 
@@ -105,7 +105,7 @@ function FarmerProfilePage() {
     <nav className="bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7] flex items-center justify-between px-3
       border-b border-gray-100 sticky top-0 z-10 h-30">
 
-      <a href="" className="w-70">
+      <a href="/" className="w-70">
         <img src="media/logo.png" alt="logo" />
       </a>
 

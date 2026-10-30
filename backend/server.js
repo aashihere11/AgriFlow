@@ -13,6 +13,7 @@ const multer = require("multer");
 const { toFile } = require("@imagekit/nodejs");
 const Product = require("./Models/Product.js");
 const mongoose = require("mongoose");
+const Cart = require("./Models/Cart.js");
 
 
 dns.setServers([
@@ -39,6 +40,137 @@ app.use(cors({
 
 app.use(cookieParser());
 app.use(express.json());
+
+
+// DELETE API: Cart se specific item hatane ke liye
+app.delete('/cart/remove', authenticate, async (req, res) => {
+  try {
+    const { userId, productId } = req.body; 
+
+    let cart = await Cart.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ success: false, message: "Cart not found" });
+    }
+
+    cart.items = cart.items.filter(item => item.product.toString() !== productId);
+
+    await cart.save();
+
+    // Updated cart items wapas bhej do
+    res.status(200).json({
+      success: true,
+      message: "Item removed from cart",
+      cartItems: cart.items
+    });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
+});
+
+app.put('/cart/update-quantity', authenticate, async (req, res) => {
+  
+  try {
+    const { userId, productId, quantity } = req.body;
+
+    const cart = await Cart.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ success: false, message: "Cart not found" });
+    }
+
+    const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+
+    cart.items[itemIndex].quantity = quantity;
+    await cart.save();
+    return res.status(200).json({ success: true, message: "Quantity updated", cartItems: cart.items });
+
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
+});
+
+
+
+app.get('/cart/:userId', authenticate, async (req, res) => {
+
+  try {
+    const { userId } = req.params;
+
+    const cart = await Cart.findOne({ userId }).populate('items.product', 'image , name , unit');
+
+    if (!cart) {
+      return res.status(200).json({ items: [] });
+    }
+
+    res.status(200).json({
+      success: true,
+      cartItems: cart.items
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+app.post('/cart/add', authenticate, async (req, res) => {
+  
+  try {
+    const userId = req.user._id;
+    const { productId, quantity } = req.body;
+
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    const qty = quantity || 1;
+    const price = product.price;
+    const farmerId = product.farmer
+
+  let cart = await Cart.findOne({ userId });
+
+    if (cart) {
+      const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+
+      if (itemIndex > -1) {
+        cart.items[itemIndex].quantity += qty;
+      } else {
+        cart.items.push({
+          product:productId,
+          quantity: qty,
+          price,
+          farmerId
+        });
+      }
+
+      await cart.save();
+    } else {
+
+      cart = await Cart.create({
+        userId,
+        items: [
+          {
+            product,
+            quantity: qty,
+            price,
+            farmerId
+          }
+        ]
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product added to cart successfully!",
+      cart
+    });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 
 
 app.patch("/update/personal-info", authenticate, async (req, res) => {
@@ -416,7 +548,7 @@ app.post("/create-user", async (req, res) => {
         role: user.role
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "10h" }
     );
 
     res.cookie("token", token, {

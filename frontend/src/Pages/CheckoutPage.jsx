@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CheckoutSteps from '../Components/CheckoutPage/CheckoutSteps';
 import DeliveryAddress from '../Components/CheckoutPage/DeliveryAddress';
@@ -10,9 +10,13 @@ function CheckoutPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const cartData = location.state;
-   if (!cartData?.fromCart) {
-        return navigate('/cart') ;
+    if (!cartData || (!cartData?.fromCart && !cartData?.isDirectBuy)) {
+        return navigate('/cart');
     }
+
+
+    const checkoutItems = location.state?.checkoutItems || [];
+
     const [form, setForm] = useState({
         firstName: "",
         lastName: "",
@@ -33,9 +37,9 @@ function CheckoutPage() {
     return (
         <>
             <div className='min-h-screen bg-[#f4f7f4] '>
-                <nav className="flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
+                <nav className="bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7]  flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
 
-                    <a href="" className="w-60">
+                    <a href="/" className="w-70">
                         <img src="media/logo.png" alt="logo" />
                     </a>
 
@@ -58,7 +62,7 @@ function CheckoutPage() {
                     </div>
 
                     {/* RIGHT */}
-                    <OrderSummary />
+                    <OrderSummary checkoutItems={checkoutItems} />
                 </div>
 
 

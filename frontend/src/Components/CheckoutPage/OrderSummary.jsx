@@ -1,8 +1,7 @@
-import { orderItems } from "../../data/checkoutpage";
 import { useNavigate } from "react-router-dom";
-function OrderSummary() {
+function OrderSummary({ checkoutItems }) {
   const navigate = useNavigate();
-  const subtotal = orderItems.reduce((sum, item) => sum + item.price, 0);
+  const subtotal = checkoutItems.reduce((sum, item) => sum + item.price, 0);
   const savings = Math.round(subtotal * 0.33);
   return (
     <>
@@ -10,17 +9,17 @@ function OrderSummary() {
         <h2 className="text-sm font-medium text-gray-800 mb-4">Order summary</h2>
         <div className="overflow-y-auto max-h-[400px] "
           style={{ scrollbarWidth: "thin", scrollbarColor: "#a8e0b5 #f9fafb" }}>
-          {orderItems.map((item) => (
-            <div key={item.id} className="flex items-center gap-3 py-2 border-b border-gray-100 last:border-none">
-              <div className="w-15 h-15 rounded-lg flex items-center justify-center mb-2 overflow-hidden">
-                {item.emoji}
+          {checkoutItems.map((item) => (
+            <div key={item.product._id} className="flex items-center gap-3 py-2 border-b border-gray-100 last:border-none">
+              <div className="w-15 h-15 md:w-30 md:h-30 rounded-lg flex items-center justify-center mb-2 overflow-hidden">
+                <img src={item.product.image.url} alt="orderimg" />
               </div>
               <div className="flex-1">
-                <p className="text-sm md:text-base font-medium text-gray-800 m-0">{item.name}</p>
-                <p className="text-sm md:text-base text-gray-400 m-0">{item.detail}</p>
+                <p className="text-sm md:text-xl font-medium text-gray-800 m-0 mb-2">{item.product.name}</p>
+                <p className="text-sm md:text-xl text-gray-400 m-0">{item.quantity}.{item.product.unit}</p>
 
               </div>
-              <p className="text-sm md:text-base font-medium text-[#1a5c2e] m-0 px-3">₹{item.price}</p>
+              <p className="text-sm md:text-xl font-medium text-[#1a5c2e] m-0 px-3">₹{item.price}</p>
             </div>
           ))}
         </div>
@@ -47,7 +46,7 @@ function OrderSummary() {
         <button
 
           className="w-full py-3 bg-[#2e8a48] hover:bg-[#1a5c2e] text-white text-sm  md:!text-base font-medium !rounded-lg transition-colors flex items-center justify-center gap-2"
-          onClick={() => navigate("/confirmationpage" , { state: { fromCheckout: true }})}>
+          onClick={() => navigate("/confirmationpage", { state: { fromCheckout: true } })}>
           🔒 Pay₹{subtotal} securely
         </button>
 

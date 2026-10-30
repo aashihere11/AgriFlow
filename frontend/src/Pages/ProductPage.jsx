@@ -9,6 +9,8 @@ import axios from "axios";
 import { getStockStatus } from '../utils/getStockStatus';
 import CircularProgress from '@mui/material/CircularProgress';
 import { getFreshnessBadge } from '../utils/getFreshnessBadge';
+import SuccessToast from '../Components/SuccessToast';
+
 
 
 function ProductPage() {
@@ -18,6 +20,8 @@ function ProductPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const { id } = useParams();
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
     const handleQtyChange = (change) => {
         const availableStock = Math.max(0, Number(product?.stock) || 0);
 
@@ -61,6 +65,30 @@ function ProductPage() {
         }
     }, [id]);
 
+
+    const addToCart = async (productId, quantity = 1) => {
+        try {
+            const response = await axios.post(
+                "http://localhost:3000/cart/add",
+                { productId, quantity },
+                { withCredentials: true }
+            );
+            if (response.data.success) {
+                setToastMessage(response.data.message || "Product added to cart successfully");
+                setShowToast(true);
+
+                setTimeout(() => {
+                    setShowToast(false);
+                }, 1000);
+
+            };
+        } catch (error) {
+            console.error("Error adding to cart:", error.response?.data || error.message);
+            throw error;
+        }
+    };
+
+
     if (loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -74,20 +102,22 @@ function ProductPage() {
     }
 
     const stockInfo = getStockStatus(product.stock, product.unit);
-     const badge = getFreshnessBadge(product.category, product.createdAt);
+    const badge = getFreshnessBadge(product.category, product.createdAt);
 
     return (
         <div className="min-h-screen bg-[#f4f7f4] ">
 
             {/* NAVBAR */}
-            <nav className="flex items-center justify-between px-8  bg-white border-b border-gray-100 sticky top-0 z-10 h-24">
+            <nav className="bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7] flex items-center justify-between px-8  bg-white border-b border-gray-100 sticky top-0 z-10 h-24">
                 <div className="flex items-center ">
                     <Link to="/" ><img src="/media/logo.png" alt="logo" className=" w-70 shrink" /></Link>
                 </div>
 
             </nav>
 
+
             <div className=' flex justify-center shrink grid md:grid-cols-3 grid-cols-1 gap-5 box-border  px-3 pt-5'>
+                <SuccessToast message={toastMessage} onClose={() => setShowToast(false)} isOpen={showToast} showToast={showToast} />
 
                 <div className='flex flex-col gap-3 shrink rounded-2xl flex items-center '>
                     <div className='flex shrink justify-center place-items-center border-2 border-[#eaf3de]  rounded-xl   bg-white' >
@@ -117,6 +147,7 @@ function ProductPage() {
                         qty={qty}
                         onQtyChange={handleQtyChange}
                         product={product}
+                        addToCart={addToCart}
                     />
 
                     {/* Farmer Info Card */}
