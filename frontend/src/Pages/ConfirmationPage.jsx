@@ -1,14 +1,12 @@
 import React from 'react';
 import DoneIcon from '@mui/icons-material/Done';
-import {useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 function ConfirmationPage() {
     const navigate = useNavigate();
-      const location = useLocation();
-    const cartData = location.state;
-   if (!cartData?.fromCheckout) {
-        return navigate('/cart') ;
-    }
+
+    const [searchParams] = useSearchParams();
+    const orderId = searchParams.get('orderId');
     return (<>
         <div className='min-h-screen flex flex-col items-center justify-center bg-[#f4f7f4]'>
             <div className="check-circle w-30 h-30 rounded-full bg-[#2e8a48] flex items-center justify-center  mb-6 ">
@@ -22,7 +20,7 @@ function ConfirmationPage() {
                 Your fresh product is on its way
             </p>
             <p className="success-order-id text-base text-gray-400 mb-8">
-                Order ID: #FD2026060612
+                {orderId}
             </p>
 
             <div className='success-sub border bg-[#f0faf2] border-[#a8e0b5] rounded-lg px-3 py-3  '>
@@ -33,7 +31,7 @@ function ConfirmationPage() {
                 <button className="px-6 py-2.5 bg-[#2e8a48] text-white text-sm font-medium rounded-lg hover:bg-[#1a5c2e]">Track order</button>
                 <button className='px-6 py-2.5 border border-[#a8e0b5] 
   text-[#2e8a48] text-sm font-medium rounded-lg hover:bg-[#f0faf2]'
-                    onClick={() => navigate("/homepage")}>
+                    onClick={() => navigate("/")}>
                     Continue shopping</button>
             </div>
         </div>

@@ -38,7 +38,7 @@ createRoot(document.getElementById('root')).render(
 
       <Route element={<ProtectedRoute allowedRoles={['consumer']}/>}>
       <Route path="/Checkoutpage" element={<CheckoutPage/>} />
-      <Route path="/confirmationpage" element={<ConfirmationPage/>} />
+      <Route path="/order-success" element={<ConfirmationPage/>} />
        <Route path="/myorders" element={<CustomerOrderPage/>} />
        <Route path="/cart" element={<CartPage/>} />  
      </Route>

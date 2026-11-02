@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-function OrderSummary({ checkoutItems }) {
+function OrderSummary({ checkoutItems, handlePayment, isValid }) {
+  console.log(isValid);
   const navigate = useNavigate();
-  const subtotal = checkoutItems.reduce((sum, item) => sum + item.price, 0);
+  const subtotal = checkoutItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const savings = Math.round(subtotal * 0.33);
   return (
     <>
@@ -45,8 +46,14 @@ function OrderSummary({ checkoutItems }) {
 
         <button
 
-          className="w-full py-3 bg-[#2e8a48] hover:bg-[#1a5c2e] text-white text-sm  md:!text-base font-medium !rounded-lg transition-colors flex items-center justify-center gap-2"
-          onClick={() => navigate("/confirmationpage", { state: { fromCheckout: true } })}>
+          className={`w-full py-3 bg-[#2e8a48]  text-white text-sm  md:!text-base font-medium !rounded-lg transition-colors 
+            flex items-center justify-center gap-2
+                ${!isValid
+              ? "bg-gray-300 cursor-not-allowed border-gray-300"
+              : "bg-[#2e8a48] hover:bg-[#1a5c2e]"
+            }`}
+          onClick={handlePayment}
+          disabled={!isValid}>
           🔒 Pay₹{subtotal} securely
         </button>
 

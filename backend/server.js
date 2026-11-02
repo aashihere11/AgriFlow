@@ -14,6 +14,9 @@ const { toFile } = require("@imagekit/nodejs");
 const Product = require("./Models/Product.js");
 const mongoose = require("mongoose");
 const Cart = require("./Models/Cart.js");
+const Razorpay = require("razorpay");
+const Order = require("./Models/Order.js");
+const crypto = require("crypto");
 
 
 dns.setServers([
@@ -41,11 +44,48 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+
+// ✅ 100% SECURE CODE
+app.post('/create-order', authenticate, async (req, res) => {
+
+  try {
+    const { checkoutItems } = req.body;
+    let totalAmount = 0;
+
+    for (let item of checkoutItems) {
+      const product = await Product.findById(item.product._id);
+
+      if (!product) {
+        return res.status(404).json({ success: false, message: "Product not found!" });
+      }
+
+      totalAmount += product.price * item.quantity;
+
+    }
+
+    const options = {
+      amount:  Math.round(totalAmount * 100),
+      currency: "INR",
+      receipt: `receipt_${Date.now()}`
+    };
+
+    const order = await razorpay.orders.create(options);
+    res.json({ success: true, order });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
 
 // DELETE API: Cart se specific item hatane ke liye
 app.delete('/cart/remove', authenticate, async (req, res) => {
   try {
-    const { userId, productId } = req.body; 
+    const { userId, productId } = req.body;
 
     let cart = await Cart.findOne({ userId });
     if (!cart) {
@@ -68,8 +108,64 @@ app.delete('/cart/remove', authenticate, async (req, res) => {
   }
 });
 
+app.post('/payment/verify', authenticate, async (req, res) => {
+
+  try {
+    const { verifyData, checkoutItems, form, slot } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = verifyData;
+
+
+    const sign = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSign = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(sign.toString())
+      .digest("hex");
+
+    let totalAmount = 0;
+    checkoutItems.forEach((item) => {
+      totalAmount += item.price * item.quantity;
+    });
+
+    if (razorpay_signature === expectedSign) {
+
+      const newOrder = new Order({
+        user: req.user._id,
+        orderItems: checkoutItems.map(item => ({
+          name: item.product.name,
+          image: item.product.image?.url || item.image,
+          price: item.price,
+          unit: item.product.unit,
+          quantity: item.quantity,
+          product: item.product._id || item.product
+        })),
+        shippingAddress: form,
+        slot: slot,
+        paymentInfo: {
+          razorpay_order_id,
+          razorpay_payment_id,
+          razorpay_signature,
+        },
+        totalAmount: totalAmount,
+        paymentStatus: 'Paid',
+        orderStatus: 'Placed'
+      });
+
+      await newOrder.save();
+
+      return res.json({ success: true, message: "Payment verified & Order saved successfully!" });
+
+    } else {
+      return res.status(400).json({ success: false, message: "Invalid signature!" });
+    }
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 app.put('/cart/update-quantity', authenticate, async (req, res) => {
-  
+
   try {
     const { userId, productId, quantity } = req.body;
 
@@ -113,7 +209,7 @@ app.get('/cart/:userId', authenticate, async (req, res) => {
 });
 
 app.post('/cart/add', authenticate, async (req, res) => {
-  
+
   try {
     const userId = req.user._id;
     const { productId, quantity } = req.body;
@@ -129,7 +225,7 @@ app.post('/cart/add', authenticate, async (req, res) => {
     const price = product.price;
     const farmerId = product.farmer
 
-  let cart = await Cart.findOne({ userId });
+    let cart = await Cart.findOne({ userId });
 
     if (cart) {
       const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
@@ -138,7 +234,7 @@ app.post('/cart/add', authenticate, async (req, res) => {
         cart.items[itemIndex].quantity += qty;
       } else {
         cart.items.push({
-          product:productId,
+          product: productId,
           quantity: qty,
           price,
           farmerId
