@@ -50,6 +50,68 @@ const razorpay = new Razorpay({
 });
 
 
+app.get('/farmer/orders', authenticate, async (req, res) => {
+  try {
+    const farmerId = req.user._id;
+
+    const farmerProducts = await Product.find({ farmer: farmerId }).select('_id');
+    const productIds = farmerProducts.map(p => p._id.toString());
+
+    const orders = await Order.find({ "orderItems.product": { $in: productIds } }).sort({ createdAt: -1 });
+
+    const modifiedOrders = orders.map(order => {
+      const orderObj = order.toObject();
+
+      orderObj.orderItems = orderObj.orderItems.filter(item =>
+        productIds.includes(item.product.toString())
+
+      );
+
+
+      const newTotalAmount = orderObj.orderItems.reduce((sum, item) => {
+        return sum + (item.price * item.quantity);
+      }, 0);
+
+
+      orderObj.totalAmount = newTotalAmount;
+
+      return orderObj;
+    });
+
+
+    res.status(200).json({
+      success: true,
+      count: orders.length,
+      orders: modifiedOrders
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Farmer orders fetch karne mein error aayi",
+      error: error.message
+    });
+  }
+});
+
+app.get('/my-orders', authenticate, async (req, res) => {
+  try {
+
+    const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      orders
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Orders fetch karne mein error aayi",
+      error: error.message
+    });
+  }
+});
+
+
 // ✅ 100% SECURE CODE
 app.post('/create-order', authenticate, async (req, res) => {
 
@@ -69,7 +131,7 @@ app.post('/create-order', authenticate, async (req, res) => {
     }
 
     const options = {
-      amount:  Math.round(totalAmount * 100),
+      amount: Math.round(totalAmount * 100),
       currency: "INR",
       receipt: `receipt_${Date.now()}`
     };

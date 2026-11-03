@@ -1,28 +1,58 @@
-import React, { useState } from 'react';
-import { orders } from '../data/Ordersdata';
+import React, { useState, useEffect } from 'react';
 import OrderCard from '../Components/FarmerOrderPage/OrderCard';
-import TemporaryDrawer from '../Components/Drawer';
+import axios from 'axios';
 import Tab from '../Components/Tab';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const tabs = ["All", "Pending", "Packed", "Out-For-Delivery", "Delivered"];
 
 function FarmerOrderPage() {
-  const [open, setOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("All");
+  const [orders, setOrders] = useState([]);
+  const [activeTab, setActiveTab] = useState('All');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFarmerOrders = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/farmer/orders', { 
+          withCredentials: true // Agar cookies/sessions use ho rahe hain
+        });
+        
+        if (response.data.success) {
+          setOrders(response.data.orders);
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFarmerOrders();
+  }, []);
+
 
   const filterOrders = activeTab === "All"
     ? orders
-    : orders.filter(o => o.status === activeTab);
+    : orders.filter(o => o.orderStatus === activeTab);
 
   // stats
   const stats = [
     { icon: "📋", label: "Total orders", value: orders.length, color: "#1a5c2e" },
-    { icon: "⏳", label: "Pending", value: orders.filter(o => o.status === "Pending").length, color: "#b8860b" },
-    { icon: "📦", label: "Packed", value: orders.filter(o => o.status === "Packed").length, color: "#1a6fa8" },
-    { icon: "🚚", label: "Out for Delivery", value: orders.filter(o => o.status === "Out-For-Delivery").length, color: "#7b3fa8" },
-    { icon: "✅", label: "Delivered", value: orders.filter(o => o.status === "Delivered").length, color: "#2e8a48" },
+    { icon: "⏳", label: "Pending", value: orders.filter(o => o.orderStatus === "Placed").length, color: "#b8860b" },
+    { icon: "📦", label: "Packed", value: orders.filter(o => o.orderStatus === "Packed").length, color: "#1a6fa8" },
+    { icon: "🚚", label: "Out for Delivery", value: orders.filter(o => o.orderStatus === "Out-For-Delivery").length, color: "#7b3fa8" },
+    { icon: "✅", label: "Delivered", value: orders.filter(o => o.orderStatus === "Delivered").length, color: "#2e8a48" },
   ];
+
+    if (loading) {
+          return (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                  <CircularProgress size="3rem" aria-label="Loading…" sx={{ color: '#165b07' }} />
+              </div>
+          );
+      }
 
   return (<>
 
@@ -67,7 +97,7 @@ function FarmerOrderPage() {
         </div>
       ) : (filterOrders.map(order => (
         <OrderCard
-          key={order.id}
+          key={order._id}
           order={order}
 
         />

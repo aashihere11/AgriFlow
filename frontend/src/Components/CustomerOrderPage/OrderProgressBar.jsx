@@ -1,6 +1,6 @@
 import React from 'react';
 const STATUS_INDEX = {
-    "Pending": 1,
+    "Placed": 1,
     "Packed": 2,
     "Out-For-Delivery": 3,
     "Delivered": 4,

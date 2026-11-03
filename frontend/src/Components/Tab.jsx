@@ -3,7 +3,10 @@ function Tab({ tab, activeTab, setActiveTab, count }) {
     return (<>
         <button
             key={tab}
-            onClick={() => setActiveTab(tab)}
+            onClick={(e) => {
+                e.stopPropagation();
+                setActiveTab(tab)}}
+            type="button"
             className={`px-1 py-1.5 !text-[8px] md:!text-base !rounded-xl font-medium border transition-all 
                   ${activeTab === tab
                     ? "bg-[#2e8a48] text-white border-[#2e8a48]"

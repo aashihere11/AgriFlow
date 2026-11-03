@@ -104,11 +104,7 @@ function CartPage() {
   return (
     <>
       <div className="min-h-screen ">
-        {loading &&
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <CircularProgress size="3rem" aria-label="Loading…" sx={{ color: '#165b07' }} />
-          </div>
-        }
+      
         <div className=" bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7] flex items-center justify-between px-3 bg-white
          border-b border-gray-100 sticky top-0 z-10 h-30  ">
 
