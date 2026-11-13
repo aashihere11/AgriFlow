@@ -1,17 +1,44 @@
-import React from 'react';
-import { orders } from "../data/Ordersdata";
+import React, { useState, useEffect } from 'react';
 import { getMonthStart, getRecentTransactions, getProductEarning } from '../utils/Earning';
 import { getTotalEarnings } from '../utils/Earning';
 import { getThisWeekEarnings } from '../utils/Earning';
 import { getThisMonthEarnings } from '../utils/Earning';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+
 
 
 function EarningPage() {
-  const totalEarnings = getTotalEarnings(orders);
-  const monthEarnings = getThisMonthEarnings(orders);
-  const weekEarnings = getThisWeekEarnings(orders);
-  const transactions = getRecentTransactions(orders);
-  const products = getProductEarning(orders);
+  const [orders, setOrders] = useState([]);
+  const user = useAuth();
+
+  useEffect(() => {
+    const fetchFarmerOrders = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/farmer/orders', {
+          withCredentials: true
+        });
+
+        if (response.data.success) {
+          setOrders(response.data.orders);
+          console.log(orders);
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFarmerOrders();
+  }, []);
+  console.log(orders);
+
+  const totalEarnings = getTotalEarnings(orders, user._id);
+  const monthEarnings = getThisMonthEarnings(orders, user._id);
+  const weekEarnings = getThisWeekEarnings(orders, user._id);
+  const transactions = getRecentTransactions(orders, user._id);
+  const products = getProductEarning(orders, user._id);
 
 
   const stats = [
@@ -34,16 +61,12 @@ function EarningPage() {
 
   return (<>
     <div className='min-h-screen  bg-[#f4f7f4]  '>
-      <nav className="flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
 
+      <nav className="bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7] flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
         <a href="" className="w-60">
-          <img src="media/logo.png" alt="logo" />
+          <img src="/media/logo.png" alt="logo" />
         </a>
-
-
-        <p className='text-xs md:text-lg text-gray-400 m-0'>july 2026</p>
       </nav>
-
 
 
       {/* TOTAL CARD */}
@@ -79,11 +102,11 @@ function EarningPage() {
 
               <div className="flex items-center  gap-1 md:gap-5 py-2.5 border-b border-gray-100 last:border-none ">
                 <div className=" w-8 h-8 md:w-15 md:h-15 rounded-lg flex items-center justify-center text-lg flex-shrink-0">
-                  {product.emoji}
+                  <img src={product.image} alt="img" />
                 </div>
-                <div className="">
+                <div className="pl-3">
                   <p className="text-xs md:text-lg font-medium text-gray-800 m-0">{product.name}</p>
-                  <p className="text-xs md:text-lg text-gray-400 m-0">{product.qtySold}{product.unit} Sold</p>
+                  <p className="text-xs md:text-base text-gray-400 m-0">{product.qtySold}{product.unit} Sold</p>
                 </div>
 
                 <p className="text-xs md:text-lg text-end font-medium text-[#1a5c2e] m-0 flex-1">
@@ -102,7 +125,7 @@ function EarningPage() {
               <div key={txn.id} className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-none ">
                 <div>
                   <p className="text-xs md:text-lg font-medium text-gray-800 m-0">
-                    {txn.orderId} · {txn.consumer.name}
+                    {txn.orderId} · {txn.consumer}
                   </p>
                   <p className="text-xs md:text-lg text-gray-400 m-0 mt-0.5"></p>
                 </div>

@@ -147,10 +147,8 @@ app.get('/farmer/orders', authenticate, async (req, res) => {
 
 
       orderObj.totalAmount = newTotalAmount;
-
       return orderObj;
     });
-
 
     res.status(200).json({
       success: true,
@@ -173,7 +171,7 @@ app.get('/my-orders', authenticate, async (req, res) => {
         path: 'orderItems.farmer',
         select: 'username' 
       }).sort({ createdAt: -1 });
-      console.log(orders);
+
     res.status(200).json({
       success: true,
       orders
