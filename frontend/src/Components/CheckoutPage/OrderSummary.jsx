@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 function OrderSummary({ checkoutItems, handlePayment, isValid }) {
-  console.log(isValid);
+ 
   const navigate = useNavigate();
   const subtotal = checkoutItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const savings = Math.round(subtotal * 0.33);

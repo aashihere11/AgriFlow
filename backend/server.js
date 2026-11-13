@@ -50,6 +50,79 @@ const razorpay = new Razorpay({
 });
 
 
+app.put('/update-item-status/:orderId/:itemId', authenticate, async (req, res) => {
+  try {
+    const { orderId, itemId } = req.params;
+    const { status } = req.body;
+    const farmerId = req.user._id;
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order nahi mila!" });
+    }
+
+    const item = order.orderItems.id(itemId);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Item nahi mila!" });
+    }
+   
+    if (item.farmer.toString() !== farmerId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Aapko is item ko update karne ki permission nahi hai!"
+      });
+    }
+    
+    item.status = status;
+
+    const allDelivered = order.orderItems.every(i => i.status === 'Delivered');
+    const allPacked = order.orderItems.every(i => i.status === 'Packed');
+    const allOnTheWay = order.orderItems.every(i => i.status === 'On The Way');
+
+    const statuses = order.orderItems.map(i => i.status);
+    const hasPending = statuses.includes('Pending');
+    const hasPackedOrMore = statuses.some(i => i.status === 'Packed' || i.status === 'Delivered' || i.status === 'On The Way');
+    
+    const farmerMap = {};
+    order.orderItems.forEach(i => {
+      const fId = i.farmer.toString();
+      if (!farmerMap[fId]) farmerMap[fId] = [];
+      farmerMap[fId].push(i.status);
+    });
+    const uniqueFarmersCount = Object.keys(farmerMap).length;
+    const isActuallyPartial = uniqueFarmersCount > 1 && hasPending && hasPackedOrMore;
+
+    if (allDelivered) {
+      order.overallStatus = 'Delivered';
+      order.isPartialDelivery = false;
+    } else if (allPacked) {
+      order.overallStatus = 'Packed';
+      order.isPartialDelivery = false;
+    }else if (allOnTheWay) { 
+      order.overallStatus = 'On The Way';
+      order.isPartialDelivery = false;
+    } else if (isActuallyPartial) {
+      console.log(Processing);
+      order.overallStatus = 'Processing';
+      order.isPartialDelivery = true;
+    } else {
+      order.overallStatus = 'Placed';
+      order.isPartialDelivery = false;
+    }
+
+    await order.save();
+   
+    res.status(200).json({
+      success: true,
+      message: `Item status updated to ${status}`,
+      order
+    });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 app.get('/farmer/orders', authenticate, async (req, res) => {
   try {
     const farmerId = req.user._id;
@@ -96,8 +169,11 @@ app.get('/farmer/orders', authenticate, async (req, res) => {
 app.get('/my-orders', authenticate, async (req, res) => {
   try {
 
-    const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
-
+    const orders = await Order.find({ user: req.user._id }).populate({
+        path: 'orderItems.farmer',
+        select: 'username' 
+      }).sort({ createdAt: -1 });
+      console.log(orders);
     res.status(200).json({
       success: true,
       orders
@@ -190,28 +266,31 @@ app.post('/payment/verify', authenticate, async (req, res) => {
 
     if (razorpay_signature === expectedSign) {
 
-      const newOrder = new Order({
-        user: req.user._id,
-        orderItems: checkoutItems.map(item => ({
-          name: item.product.name,
-          image: item.product.image?.url || item.image,
-          price: item.price,
-          unit: item.product.unit,
-          quantity: item.quantity,
-          product: item.product._id || item.product
-        })),
-        shippingAddress: form,
-        slot: slot,
-        paymentInfo: {
-          razorpay_order_id,
-          razorpay_payment_id,
-          razorpay_signature,
-        },
-        totalAmount: totalAmount,
-        paymentStatus: 'Paid',
-        orderStatus: 'Placed'
-      });
-
+     const newOrder = new Order({
+    user: req.user._id,
+    orderItems: checkoutItems.map(item => ({
+      name: item.product?.name || item.name,
+      image: item.product?.image?.url || item.image,
+      price: item.price,
+      unit: item.product?.unit || item.unit,
+      quantity: item.quantity,
+      product: item.product?._id || item.product,
+      
+      farmer: item.farmerId, 
+      
+      status: 'Pending'
+    })),
+    shippingAddress: form,
+    slot: slot,
+    paymentInfo: {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+    },
+    totalAmount: totalAmount,
+    paymentStatus: 'Paid',
+    overallStatus: 'Placed'
+});
       await newOrder.save();
 
       return res.json({ success: true, message: "Payment verified & Order saved successfully!" });

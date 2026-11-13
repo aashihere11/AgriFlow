@@ -15,11 +15,25 @@ const orderSchema = new mongoose.Schema(
                     ref: 'Product',
                     required: true,
                 },
+
+                farmer: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User',
+                    required: true,
+                },
                 name: { type: String, required: true },
                 quantity: { type: Number, required: true },
                 price: { type: Number, required: true },
-                unit: { type: String, require: true },
+                unit: { type: String, required: true },
                 image: { type: String, required: true },
+
+
+                status: {
+                    type: String,
+                    required: true,
+                    default: 'Pending',
+                    enum: ['Pending', 'Packed', 'On The Way', 'Delivered']
+                }
             },
         ],
 
@@ -31,6 +45,7 @@ const orderSchema = new mongoose.Schema(
             pinCode: { type: String, required: true },
             state: { type: String, required: true },
         },
+
         slot: {
             type: String,
             required: true,
@@ -41,7 +56,6 @@ const orderSchema = new mongoose.Schema(
             razorpay_payment_id: { type: String },
             razorpay_signature: { type: String },
         },
-
 
         totalAmount: {
             type: Number,
@@ -54,11 +68,19 @@ const orderSchema = new mongoose.Schema(
             default: 'Pending',
         },
 
-        orderStatus: {
+
+        overallStatus: {
             type: String,
             required: true,
             default: 'Placed',
+            enum: ['Placed', 'Packed', 'Processing', 'On The Way', 'Delivered']
         },
+
+
+        isPartialDelivery: {
+            type: Boolean,
+            default: false
+        }
     },
     {
         timestamps: true,

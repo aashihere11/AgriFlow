@@ -2,11 +2,12 @@ import React from 'react';
 const STATUS_INDEX = {
     "Placed": 1,
     "Packed": 2,
-    "Out-For-Delivery": 3,
-    "Delivered": 4,
+    "Processing" : 3,
+    "On The Way": 4,
+    "Delivered": 5,
 };
 
-const Steps = ["Placed", "Packed", "On the way", "Delivered"];
+const Steps = ["Placed", "Packed", "Processing", "On the Way", "Delivered"];
 function OrderProgressBar({ status }) {
     const currentStep = STATUS_INDEX[status];
 

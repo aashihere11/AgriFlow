@@ -25,10 +25,11 @@ function ProductInfoCard({ qty, onQtyChange, product, addToCart }) {
       _id: product._id,
       name: product.name,
       image: product.image,
-      unit: product.unit
+      unit: product.unit,
     },
     quantity: qty,
-    price: product.price
+    price: product.price,
+    farmerId:product.farmer
   }];
 
   navigate('/Checkoutpage', {
