@@ -2,9 +2,11 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import TemporaryDrawer from './Drawer';
+import { useAuth } from '../context/AuthContext';
 function Navbar() {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
   return (<>
 
     {/* NAVBAR */}
@@ -24,13 +26,13 @@ function Navbar() {
         ))}
       </div>
 
-
-      <button
-        onClick={() => navigate('/cart')}
-        className="flex items-center  px-2 py-2 !text-xs md:!text-base font-medium text-gray-400 rounded-lg hover:bg-black transition-colors text-nowrap">
-        🛒 Cart (2)
-      </button>
-
+      {user.role === 'consumer' &&
+        <button
+          onClick={() => navigate('/cart')}
+          className="flex items-center  px-2 py-2 !text-xs md:!text-base font-medium text-gray-400 rounded-lg hover:bg-black transition-colors text-nowrap">
+          🛒 Cart (2)
+        </button>
+      }
     </nav>
   </>
   );

@@ -5,12 +5,54 @@ import { getThisWeekEarnings } from '../utils/Earning';
 import { getThisMonthEarnings } from '../utils/Earning';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import WithdrawModal from '../Components/EarningPage/WithdrawalModal';
+import SuccessToast from '../Components/SuccessToast';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 
 function EarningPage() {
   const [orders, setOrders] = useState([]);
   const user = useAuth();
+  const [withdrawalsList, setWithdrawalsList] = useState([]);
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const [withdrawnTotal, setWithdrawnTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+
+  const handleWithdrawSuccess = async (payoutData) => {
+    try {
+      const res = await axios.post('http://localhost:3000/withdrawals', payoutData, { withCredentials: true });
+
+      setWithdrawnTotal((prev) => prev + payoutData.amount);
+      setToastMessage(`₹${payoutData.netReceivable} transferred to ${payoutData.destination}!`);
+      setShowToast(true);
+
+      setTimeout(() => {
+        setShowToast(false);
+      }, 1000);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchWithdrawals = async () => {
+    try {
+      const res = await axios.get('http://localhost:3000/my-withdrawals', { withCredentials: true });
+      setWithdrawnTotal(res.data.totalWithdrawn);
+      setWithdrawalsList(res.data.withdrawals);
+    } catch (error) {
+      console.error('Error fetching:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWithdrawals();
+  }, []);
+
 
   useEffect(() => {
     const fetchFarmerOrders = async () => {
@@ -32,14 +74,15 @@ function EarningPage() {
 
     fetchFarmerOrders();
   }, []);
-  console.log(orders);
+
 
   const totalEarnings = getTotalEarnings(orders, user._id);
   const monthEarnings = getThisMonthEarnings(orders, user._id);
   const weekEarnings = getThisWeekEarnings(orders, user._id);
   const transactions = getRecentTransactions(orders, user._id);
   const products = getProductEarning(orders, user._id);
-
+  console.log(withdrawnTotal);
+  const availableBalance = Math.max(0, totalEarnings - withdrawnTotal);
 
   const stats = [
     {
@@ -59,27 +102,47 @@ function EarningPage() {
     }
   ];
 
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress size="3rem" aria-label="Loading…" sx={{ color: '#165b07' }} />
+      </div>
+    );
+  }
+
   return (<>
     <div className='min-h-screen  bg-[#f4f7f4]  '>
 
       <nav className="bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7] flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
-        <a href="" className="w-60">
+        <a href="/" className="w-70">
           <img src="/media/logo.png" alt="logo" />
         </a>
       </nav>
 
 
       {/* TOTAL CARD */}
-      <div className='p-3'>
-        <div className="rounded-2xl p-3  text-white shadow-2xl  "
-          style={{ background: "linear-gradient(135deg, #2e8a48, #1a5c2e)" }}>
-          <p className="text-xs md:text-lg opacity-80 m-0 mb-1">Total earnings</p>
-          <p className="font-serif text-2xl md:text-4xl m-0 mb-1">Rs.{totalEarnings}</p>
-          <p className="text-xs md:text-base opacity-70 m-0">Since you joined AgriFlow</p>
+      <div className='grid grid-cols-2 justify-content gap-5 p-3'>
+        <div className=''>
+          <div className="rounded-2xl p-3  text-white shadow-2xl "
+            style={{ background: "linear-gradient(135deg, #2e8a48, #1a5c2e)" }}>
+            <p className="text-xs md:text-lg opacity-80 m-0 mb-1">Total earnings</p>
+            <p className="font-serif text-2xl md:text-4xl m-0 mb-1">Rs.{totalEarnings}</p>
+            <p className="text-xs md:text-base opacity-70 m-0">Since you joined AgriFlow</p>
+          </div>
+        </div>
+        <div className="bg-green-50 p-3 rounded-2xl border border-green-200 shadow-xs flex flex-col justify-between  ">
+          <div>
+            <p className="text-sm md:text-lg  text-green-800 font-medium m-0">Available Balance</p>
+            <span className="text-xs  md:text-base font-medium text-green-700 mt-1">₹{availableBalance.toLocaleString('en-IN')}</span>
+          </div>
+          <button
+            onClick={() => setIsWithdrawOpen(true)}
+            className="mt-2 w-full bg-green-600 hover:bg-green-700 text-white !text-xs md:!text-base font-semibold py-2 !rounded-xl transition shadow-sm"
+          >
+            Withdraw Funds
+          </button>
         </div>
       </div>
-
-
 
       {/* STATS */}
       <div className="flex gap-3 mb-4 p-3">
@@ -94,10 +157,11 @@ function EarningPage() {
       </div>
 
       {/* PRODUCT EARNINGS */}
-      <div className='grid grid-cols-1 md:grid-cols-2 md:gap-5 p-3'>
-        <div className="bg-white border border-gray-200 rounded-xl p-4 mb-4 ">
+      <div className='grid grid-cols-1 md:grid-cols-3 md:gap-5 p-3'>
+        <SuccessToast message={toastMessage} onClose={() => setShowToast(false)} isOpen={showToast} showToast={showToast} />
+        <div className="bg-white border border-gray-200 rounded-xl p-4 ">
           <p className="text-sm md:text-xl font-medium text-gray-800 m-0 mb-3">Earnings by product</p>
-          <div className='max-h-[420px] overflow-y-auto'>
+          <div className='max-h-[300px] overflow-y-auto'>
             {products.map(product => (
 
               <div className="flex items-center  gap-1 md:gap-5 py-2.5 border-b border-gray-100 last:border-none ">
@@ -118,9 +182,9 @@ function EarningPage() {
         </div>
 
         {/* RECENT TRANSACTIONS */}
-        <div className="bg-white border border-gray-200 rounded-xl p-4 mb-4">
+        <div className="bg-white border border-gray-200 rounded-xl p-4">
           <p className="text-sm md:text-xl font-medium text-gray-800 m-0 mb-3">Recent transactions</p>
-          <div className='max-h-[420px] overflow-y-auto'>
+          <div className='max-h-[300px] overflow-y-auto'>
             {transactions.map(txn => (
               <div key={txn.id} className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-none ">
                 <div>
@@ -134,8 +198,57 @@ function EarningPage() {
             ))}
           </div>
         </div>
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <span className="font-bold text-gray-900 text-sm md:text-lg">Payout History</span>
+          </div>
+          {withdrawalsList.length === 0 ? (
+            <p className="p-6 text-center text-gray-500 text-sm">No withdrawals made yet.</p>
+          ) : (
+            <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
+              <table className="w-full text-left border-collapse text-sm ">
+                <thead>
+                  <tr className="bg-gray-50 text-gray-600 border-b border-gray-100">
+                    <th className="p-4 font-semibold">Date</th>
+                    <th className="p-4 font-semibold">Method</th>
+                    <th className="p-4 font-semibold">Destination</th>
+                    <th className="p-4 font-semibold">Amount</th>
+                    <th className="p-4 font-semibold">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {withdrawalsList.map((item) => (
+                    <tr key={item._id} className="hover:bg-gray-50/50">
+                      <td className="p-4 text-gray-600">
+                        {new Date(item.createdAt).toLocaleDateString('en-IN', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </td>
+                      <td className="p-4 font-medium text-gray-900">{item.method}</td>
+                      <td className="p-4 text-gray-600">{item.destination}</td>
+                      <td className="p-4 font-bold text-gray-900">₹{item.amount.toLocaleString('en-IN')}</td>
+                      <td className="p-4">
+                        <span className="px-2.5 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
+                          {item.status || 'Completed'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
 
       </div>
+      <WithdrawModal
+        isOpen={isWithdrawOpen}
+        onClose={() => setIsWithdrawOpen(false)}
+        availableBalance={availableBalance}
+        onWithdrawSuccess={handleWithdrawSuccess}
+      />
     </div>
   </>);
 }

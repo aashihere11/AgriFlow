@@ -17,6 +17,7 @@ const Cart = require("./Models/Cart.js");
 const Razorpay = require("razorpay");
 const Order = require("./Models/Order.js");
 const crypto = require("crypto");
+const Withdraw = require("./Models/Withdraw.js");
 
 
 dns.setServers([
@@ -49,6 +50,49 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
+app.get('/my-withdrawals', authenticate, async(req, res) => {
+  try {
+    const farmerId = req.user._id;
+    const withdrawals = await Withdraw.find({ farmerId }).sort({ createdAt: -1 });
+
+    // Calculate total withdrawn amount
+    const totalWithdrawn = withdrawals.reduce((sum, item) => sum + item.amount, 0);
+
+    res.status(200).json({
+      totalWithdrawn,
+      withdrawals
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch withdrawals', error: error.message });
+  }
+})
+
+app.post('/withdrawals', authenticate, async(req, res) => {
+try {
+    const { amount, fee, netReceivable, method, destination } = req.body;
+    const farmerId = req.user._id; 
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ message: 'Invalid withdrawal amount' });
+    }
+
+    const withdrawal = await Withdraw.create({
+      farmerId,
+      amount,
+      fee,
+      netReceivable,
+      method,
+      destination
+    });
+
+    res.status(201).json({
+      message: 'Withdrawal processed successfully',
+      withdrawal
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error while processing withdrawal', error: error.message });
+  }
+})
 
 app.put('/update-item-status/:orderId/:itemId', authenticate, async (req, res) => {
   try {
