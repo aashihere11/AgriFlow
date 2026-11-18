@@ -15,19 +15,19 @@ export const getMonthStart = () => {
 };
 
 export const getFilteredFarmerItems = (orders, currentFarmerId) => {
-    let filteredItems = [];
-       const ordersArray = Array.isArray(orders) ? orders : [];
-    orders?.forEach(order => {
+    const ordersArray = Array.isArray(orders) ? orders : [];
+    const filteredItems = [];
+    ordersArray.forEach(order => {
         order.orderItems?.forEach(item => {
-    
+
             const isMyItem = currentFarmerId ? item.farmer === currentFarmerId : true;
             const isDelivered = (item.status || "") === "Delivered";
 
             if (isMyItem && isDelivered) {
                 filteredItems.push({
                     ...item,
-                    orderId: order._id ,
-                    razorpayOrderId: order.paymentInfo?.razorpay_order_id ,
+                    orderId: order._id,
+                    razorpayOrderId: order.paymentInfo?.razorpay_order_id,
                     consumerName: order.shippingAddress?.fullName,
                     date: order.createdAt
                 });
@@ -51,8 +51,8 @@ export const getThisWeekEarnings = (orders, currentFarmerId) => {
     const deliveredItems = getFilteredFarmerItems(orders, currentFarmerId);
 
     return deliveredItems.filter(item => new Date(item.date) >= weekStart)
-    .reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || item.qty || 1)), 0);
-    
+        .reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || item.qty || 1)), 0);
+
 }
 
 export const getThisMonthEarnings = (orders, currentFarmerId) => {
@@ -73,7 +73,7 @@ export const getProductEarning = (orders, currentFarmerId) => {
         if (!map[itemName]) {
             map[itemName] = {
                 name: itemName,
-                image: item.image, 
+                image: item.image,
                 qtySold: 0,
                 unit: item.unit || "pcs",
                 amount: 0
@@ -94,10 +94,11 @@ export const getRecentTransactions = (orders, currentFarmerId) => {
     return deliveredItems
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .map(item => ({
-           id: item._id || Math.random(),
-            orderId: item.razorpayOrderId, 
-            consumer: item.consumerName, 
+            id: item._id || Math.random(),
+            orderId: item.razorpayOrderId,
+            consumer: item.consumerName,
             total: (item.price || 0) * (item.quantity || item.qty || 1),
             date: item.date
         }));
 };
+

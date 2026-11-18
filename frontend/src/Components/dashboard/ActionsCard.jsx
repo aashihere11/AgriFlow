@@ -1,8 +1,13 @@
-import React from 'react';
-import { quickActions } from "../../data/farmerDashboardData.js"
 import { useNavigate } from 'react-router-dom';
 function ActionsCard() {
     const navigate = useNavigate();
+
+    const quickActions = [
+        { icon: "➕", label: "Add new product", path: "/myproducts" },
+        { icon: "🔄", label: "Update product", path: "/myproducts" },
+        { icon: "🚚", label: "Mark order dispatched", path: "/orders" },
+        { icon: "📊", label: "View full earnings", path: "/earnings" },
+    ]
     return (<>
 
         {/* QUICK ACTIONS */}

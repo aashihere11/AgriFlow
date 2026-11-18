@@ -81,7 +81,6 @@ function EarningPage() {
   const weekEarnings = getThisWeekEarnings(orders, user._id);
   const transactions = getRecentTransactions(orders, user._id);
   const products = getProductEarning(orders, user._id);
-  console.log(withdrawnTotal);
   const availableBalance = Math.max(0, totalEarnings - withdrawnTotal);
 
   const stats = [

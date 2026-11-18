@@ -112,15 +112,15 @@ a:hover {
   background: #e74c3c;
 }
 
-.text-fresh {
+.Fresh {
   color: #2e8a48;
 }
 
-.text-Update {
+.Best {
   color: #e67e22;
 }
 
-.text-Expired {
+.Expired {
   color: #e74c3c;
 }
 
@@ -185,6 +185,11 @@ a:hover {
 
 
 /* badges */
+.pending {
+  background: #fff8e1;
+  color: #b8860b;
+  border: 0.5px solid #d4b55a;
+}
 
 .placed {
   background: #fff8e1;

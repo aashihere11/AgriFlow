@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import FreshnessCard from './FreshnessCard';
 import EarningsCard from './EarningsCard';
 import ActionsCard from './ActionsCard';
-function TabSwitcher() {
+function TabSwitcher({WeekOrders, farmerProducts}) {
  const[activeTab, setActiveTab] = useState("earnings");
 
     return (<>
@@ -34,14 +34,14 @@ function TabSwitcher() {
             </button>
         </div>
         <div className='md:hidden'>
-            {activeTab === "earnings" && <EarningsCard />}
-            {activeTab === "freshness" && <FreshnessCard />}
+            {activeTab === "earnings" && <EarningsCard WeekOrders={WeekOrders}/>}
+            {activeTab === "freshness" && <FreshnessCard farmerProducts={farmerProducts}/>}
             {activeTab === "actions" && <ActionsCard />}
         </div>
 
         <div className='md:grid-cols-3 hidden sm:grid gap-4 mt-5 '>
-            <EarningsCard />
-            <FreshnessCard />
+            <EarningsCard WeekOrders={WeekOrders} />
+            <FreshnessCard farmerProducts={farmerProducts}/>
             <ActionsCard />
         </div>
     </>);
