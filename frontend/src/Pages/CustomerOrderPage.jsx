@@ -75,7 +75,7 @@ function CustomerOrderPage() {
                     <span className='text-5xl font-mdeium text-gray-400'>No Orders </span>
                 </div>
                     : (
-                        <div className='grid grid-cols-1 md:grid-cols-2 md:gap-5 p-4'>
+                        <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 md:gap-5 p-3'>
                             {filterOrders.map(order => (
                                 <CustomerOrderCard
                                     order={order}

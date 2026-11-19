@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import OrderProgressBar from './OrderProgressBar';
+import ReviewModal from '../ReviewModal';
 function CustomerOrderCard({ order }) {
+  const [reviewTarget, setReviewTarget] = useState(null);
+
   const getProgressWidth = (status) => {
     switch (status) {
       case 'Placed': return 'w-[25%]';
@@ -12,9 +15,7 @@ function CustomerOrderCard({ order }) {
   };
   const statusClass = order.overallStatus ? order.overallStatus.toLowerCase().replace(/\s+/g, '-') : '';
 
-
-
-  return (<div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 mb-4">
+  return (<div className="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex flex-col justify-between space-y-1 mb-4">
     <div>
       {/* Top Progress Bar */}
       <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden mb-4">
@@ -37,7 +38,7 @@ function CustomerOrderCard({ order }) {
             <span className="bg-emerald-50 text-emerald-700 text-xs font-medium px-2.5 py-1 rounded-full border border-emerald-100">
               Partial Delivery
             </span>)}
-          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${statusClass}`}>
+          <span className={`text-xs font-semibold px-2 py-1 rounded-full ${statusClass}`}>
             {order.overallStatus || 'Placed'}
           </span>
         </div>
@@ -64,15 +65,23 @@ function CustomerOrderCard({ order }) {
                   {item.farmer.username || 'Farmer'} 👤
                 </p>
               </div>
-
-              <span className={`border text-[10px] font-semibold px-2 py-0.5 rounded-md ${itemStatusClass}`}>
-                {item.status || 'Pending'}
-              </span>
-
+              <div>
+                <p className={`border text-[10px] text-center -semibold px-1 m-0 py-0.5 rounded-md ${itemStatusClass}`}>
+                  {item.status || 'Pending'}
+                </p>
+                <button className='!text-[10px] font-bold text-yellow-400'
+                  onClick={() => setReviewTarget({ orderId: order._id, item })}>leave a review</button>
+              </div>
             </div>
           )
         })}
       </div>
+      <ReviewModal
+        isOpen={Boolean(reviewTarget)}
+        onClose={() => setReviewTarget(null)}
+        orderId={reviewTarget?.orderId}
+        order={reviewTarget?.item}
+      />
     </div>
 
     {/* Footer: Delivery Slot & Total Price */}
