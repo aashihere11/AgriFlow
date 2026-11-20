@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ProductInfoCard from '../Components/ProductPage/ProductInfoCard';
 import FarmerInfoCard from '../Components/ProductPage/FarmerInfocard';
 import DeliveryInfoCard from '../Components/ProductPage/DeliveryInfoCard';
@@ -10,6 +10,7 @@ import { getStockStatus } from '../utils/getStockStatus';
 import CircularProgress from '@mui/material/CircularProgress';
 import { getFreshnessBadge } from '../utils/getFreshnessBadge';
 import SuccessToast from '../Components/SuccessToast';
+import Navbar from '../Components/Navbar';
 
 
 
@@ -22,6 +23,7 @@ function ProductPage() {
     const { id } = useParams();
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
+    const [reviews, setReviews] = useState([]);
     const handleQtyChange = (change) => {
         const availableStock = Math.max(0, Number(product?.stock) || 0);
 
@@ -31,7 +33,22 @@ function ProductPage() {
             return Math.min(availableStock, Math.max(1, previousQty + change));
         });
     };
-
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3000/reviews/${id}`, { withCredentials: true });
+                if (response.data.success) {
+                    setReviews(response.data.reviews);
+                }
+            } catch (error) {
+                console.error("Failed to fetch product", error);
+            }
+        }
+         if (id) {
+            fetchReviews();
+        } 
+    },[id]);
+        
     useEffect(() => {
         const fetchProduct = async () => {
             setLoading(true);
@@ -107,13 +124,7 @@ function ProductPage() {
     return (
         <div className="min-h-screen bg-[#f4f7f4] ">
 
-            {/* NAVBAR */}
-            <nav className="bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7] flex items-center justify-between px-8  bg-white border-b border-gray-100 sticky top-0 z-10 h-24">
-                <div className="flex items-center ">
-                    <Link to="/" ><img src="/media/logo.png" alt="logo" className=" w-70 shrink" /></Link>
-                </div>
-
-            </nav>
+            <Navbar />
 
 
             <div className=' flex justify-center shrink grid md:grid-cols-3 grid-cols-1 gap-5 box-border  px-3 pt-5'>
@@ -162,12 +173,9 @@ function ProductPage() {
 
             {/* Review Section */}
             <div className=' mx-auto  p-3'>
-                <ReviewSection />
+                <ReviewSection reviews={reviews} product={product}/>
                 <SimilarProducts productId={product._id} />
             </div>
-
-
-
 
         </div>
     );

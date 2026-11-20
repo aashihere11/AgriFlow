@@ -4,6 +4,7 @@ import axios from 'axios';
 import Tab from '../Components/Tab';
 import CircularProgress from '@mui/material/CircularProgress';
 import SuccessToast from '../Components/SuccessToast';
+import Navbar from '../Components/Navbar';
 
 
 
@@ -107,13 +108,7 @@ function FarmerOrderPage() {
     <div className='min-h-screen bg-[#f4f7f4] font-sans'>
       <SuccessToast message={toastMessage} onClose={() => setShowToast(false)} isOpen={showToast} showToast={showToast} />
 
-      <nav className="bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7] flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
-
-        <a href="" className="w-60">
-          <img src="media/logo.png" alt="logo" />
-        </a>
-
-      </nav>
+      <Navbar />
 
       {/* STATS */}
       <div className="hidden sm:flex items-center gap-5 mb-6 p-3  ">

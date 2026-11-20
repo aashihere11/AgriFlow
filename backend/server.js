@@ -52,6 +52,27 @@ const razorpay = new Razorpay({
 });
 
 
+app.get("/reviews/:id", authenticate, async(req, res) =>{
+  try {
+    const {id: productId} = req.params;
+
+    const reviews = await Review.find({ product: productId })
+      .populate("user", "username")
+      .sort({ createdAt: -1 });
+    console.log(reviews);
+    return res.status(200).json({
+      success: true,
+      count: reviews.length,
+      reviews,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to fetch reviews.",
+    });
+  }
+})
+
 
 const recalculateProductRating = async (productId) => {
   const reviews = await Review.find({ product: productId });

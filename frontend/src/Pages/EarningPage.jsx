@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import WithdrawModal from '../Components/EarningPage/WithdrawalModal';
 import SuccessToast from '../Components/SuccessToast';
 import CircularProgress from '@mui/material/CircularProgress';
+import Navbar from '../Components/Navbar';
 
 
 
@@ -112,11 +113,7 @@ function EarningPage() {
   return (<>
     <div className='min-h-screen  bg-[#f4f7f4]  '>
 
-      <nav className="bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7] flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
-        <a href="/" className="w-70">
-          <img src="/media/logo.png" alt="logo" />
-        </a>
-      </nav>
+      <Navbar />
 
 
       {/* TOTAL CARD */}

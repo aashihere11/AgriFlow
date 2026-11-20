@@ -4,6 +4,7 @@ import TabSwitcher from '../Components/dashboard/TabSwitcher';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { thisWeekOrders, getWeeklyItemEarnings, getWeeklyGrowth, getTodayOrderStats, getGreeting } from '../utils/Dashboard';
+import Navbar from '../Components/Navbar';
 function DashboardPage() {
   const { user } = useAuth();
   const farmerId = user._id;
@@ -86,13 +87,7 @@ function DashboardPage() {
     { icon: "⭐", label: "Avg. rating", val: "4.8", sub: "from 124 reviews", trend: "neutral" },
   ];
   return (<>
-    <nav className="bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7]  flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10 h-24 p-3">
-
-      <a href="/" className="w-60">
-        <img src="/media/logo.png" alt="AgriFlow" />
-      </a>
-
-    </nav>
+    <Navbar />
     <div className='bg-[#f4f7f4] min-h-screen p-3'>
       {/* TOP BAR */}
 

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './Pages/HomePage.jsx';
 import LoginPage from './Pages/LoginPage.jsx';
 import ProductPage from './Pages/ProductPage.jsx';
+import ReviewPage from './Pages/ReviewPage.jsx';
 import CartPage from './Pages/CartPage.jsx';
 import DashboardPage from './Pages/DashboardPage.jsx';
 import CheckoutPage from './Pages/CheckoutPage.jsx';
@@ -45,6 +46,7 @@ createRoot(document.getElementById('root')).render(
 
      <Route element={<ProtectedRoute allowedRoles={['consumer', 'farmer']}/>}>
       <Route path="/product/:id" element={<ProductPage />} />
+      <Route path="/product/:id/reviews" element={<ReviewPage />} />
       <Route path="/" element={<HomePage />} />
      </Route>
    </Routes>

@@ -5,6 +5,7 @@ import CartItem from "../Components/CartPage/CartItem";
 import axios from 'axios';
 import { useAuth } from "../context/AuthContext";
 import CircularProgress from '@mui/material/CircularProgress';
+import Navbar from "../Components/Navbar";
 
 function CartPage() {
   const navigate = useNavigate();
@@ -105,19 +106,7 @@ function CartPage() {
     <>
       <div className="min-h-screen ">
       
-        <div className=" bg-gradient-to-r from-[#e0f2fe] via-[#f0fdf4] to-[#fef3c7] flex items-center justify-between px-3 bg-white
-         border-b border-gray-100 sticky top-0 z-10 h-30  ">
-
-          <a href="/" className="w-70 ">
-            <img src="media/logo.png" alt="logo" className="m-2 z-[100] " />
-          </a>
-
-          <div className=" flex items-center gap-x-8  justify-stretch mr-8">
-            <span className="rounded-3xl border-1 border-green-200 bg-green-50 border-solid text-[8px] md:text-base font-medium px-2 py-2 text-nowrap">
-              🛒 Cart· {items.length}
-            </span>
-          </div>
-        </div>
+        <Navbar/>
 
         {/* SCROLLABLE ITEMS */}
         {items.length === 0 ? (
