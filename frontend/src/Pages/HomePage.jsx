@@ -17,12 +17,12 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const navigate = useNavigate();
-  const {user, setUser} = useAuth();
+  const { user, setUser } = useAuth();
 
   useEffect(() => {
 
     if (user && user.role === 'farmer' && user.hasSeenWelcomeModal === false) {
-      setShowWelcomeModal(true); 
+      setShowWelcomeModal(true);
     }
   }, [user]);
 
@@ -31,7 +31,7 @@ function HomePage() {
     try {
 
       const response = await axios.patch("http://localhost:3000/users/update-welcome-status", {}, { withCredentials: true });
-      if(response.data.success){
+      if (response.data.success) {
         setUser(response.data.user);
         console.log(user);
       }
@@ -44,7 +44,7 @@ function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/products", {
+        const response = await axios.get(`http://localhost:3000/products?category=${activeCategory}`, {
           withCredentials: true
         });
         if (response.data.success) {
@@ -58,7 +58,7 @@ function HomePage() {
     };
 
     fetchProducts();
-  }, []);
+  }, [activeCategory]);
 
 
   return (
@@ -91,7 +91,7 @@ function HomePage() {
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 className={`flex flex-col items-center gap-1.5 flex-1 p-3 rounded-xl border-1 cursor-pointer transition-all
-                transition duration-150 hover:scale-110
+                transition duration-150 
                 ${activeCategory == cat.id ?
                     "bg-[#f0faf2] border-[#2e8a48] "
                     : "bg-gray-50 border-gray-200 hover:bg-[#f0faf2] hover:border-[#a8e0b5]"}`}

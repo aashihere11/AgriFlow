@@ -26,19 +26,14 @@ export default function MediaCard({ product, onClick }) {
           </span>
 
           {/* Farmer Name & Location with icons */}
-          <p className="text-[11px] md:text-base text-gray-600 flex items-center gap-1.5 m-0 mb-3 truncate">
-            <span>👤 {product.farmer?.name || "Rahul"}</span>
-            {product.farmer?.location && (
-              <>
-                <span>•</span>
-                <span>📍 {product.farmer.location}</span>
-              </>
-            )}
-          </p>
+    
+            <p className='m-0 text-sm md:text-base font-medium'>👤 {product.farmer?.username || "Rahul"}</p>     
+    
+                <p className='m-0 text-sm md:text-base font-medium'>📍 {product.farmer.location}</p>      
         </div>
 
         {/* Price & Add Button */}
-        <div className="flex items-center justify-between mt-auto">
+        <div className="flex items-center justify-between mt-2">
           <span className="text-[8px] md:text-sm font-bold bg-[#607c49] text-white px-2.5 py-1 rounded-lg shadow-sm">
             ₹{product.price} / {product.unit || 'kg'}
           </span>

@@ -885,7 +885,12 @@ app.get('/products/:id', async (req, res) => {
 // Fetch all products from database
 app.get("/products", async (req, res) => {
   try {
-    const products = await Product.find({}).populate('farmer', 'username location');
+    const { category } = req.query;
+    const filter = {};
+    if (category && category.toLowerCase() !== "all") {
+      filter.category = category;
+    }
+    const products = await Product.find(filter).populate('farmer', 'username location');
     res.status(200).json({
       success: true,
       products
@@ -1015,6 +1020,21 @@ app.post("/login", async (req, res) => {
   res.json({
     success: true,
     message: "Login successful"
+  });
+});
+
+app.post("/logout", (req, res) => {
+
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Logged out and cookie cleared",
   });
 });
 
