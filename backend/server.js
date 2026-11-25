@@ -19,6 +19,12 @@ const Order = require("./Models/Order.js");
 const crypto = require("crypto");
 const Withdraw = require("./Models/Withdraw.js");
 const Review = require("./Models/Review.js");
+const { GoogleGenAI } = require('@google/genai');
+
+dotenv.config();
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 
 dns.setServers([
@@ -26,7 +32,6 @@ dns.setServers([
   '8.8.8.8'
 ]);
 
-dotenv.config();
 connectDB();
 
 const imagekit = new ImageKit({
@@ -51,15 +56,58 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
+async function generateDescription(productName, category) {
+  if (!GEMINI_API_KEY) {
+    throw new Error("GEMINI_API_KEY is not configured.");
+  }
 
-app.get("/reviews/:id", authenticate, async(req, res) =>{
+  const response = await ai.models.generateContent({
+    model: "gemini-3.5-flash-lite",
+    config: {
+      systemInstruction:
+        "You write clear, helpful, and concise product descriptions in 2-3 sentences.",
+    },
+    contents: `Generate a description for product: "${productName}" in category: "${category}".`,
+  });
+
+  return response.text;
+}
+
+app.post("/generate-description", authenticate, async (req, res) => {
   try {
-    const {id: productId} = req.params;
+    const { productName, category } = req.body;
+
+    if (!productName || !category) {
+      return res.status(400).json({
+        success: false,
+        message: "productName and category are required.",
+      });
+    }
+
+    const description = await generateDescription(productName, category);
+
+    return res.status(200).json({
+      success: true,
+      description
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to genrate description.",
+    });
+  }
+})
+
+
+app.get("/reviews/:id", authenticate, async (req, res) => {
+  try {
+    const { id: productId } = req.params;
 
     const reviews = await Review.find({ product: productId })
       .populate("user", "username")
       .sort({ createdAt: -1 });
-    console.log(reviews);
+
     return res.status(200).json({
       success: true,
       count: reviews.length,
@@ -98,20 +146,21 @@ app.post("/createOrUpdateReview", authenticate, async (req, res) => {
   try {
     const { productId, orderId, rating, comment } = req.body;
     const userId = req.user._id;
-    console.log(1);
+
     const numericRating = Number(rating);
-     console.log(1);
+
     const orderQuery = {
       user: userId,
-    orderItems: {
-    $elemMatch: {
-      product: productId,
-      status: "Delivered",
-    },
-    }};
-    
+      orderItems: {
+        $elemMatch: {
+          product: productId,
+          status: "Delivered",
+        },
+      }
+    };
+
     const verifiedOrder = await Order.findOne(orderQuery);
-    
+
     if (!verifiedOrder) {
       return res.status(403).json({
         success: false,
@@ -137,7 +186,7 @@ app.post("/createOrUpdateReview", authenticate, async (req, res) => {
         success: false,
         message: "You have already reviewed this product.",
       });
-    } 
+    }
 
     const review = await Review.create({
       user: userId,
@@ -148,7 +197,7 @@ app.post("/createOrUpdateReview", authenticate, async (req, res) => {
     })
 
     await recalculateProductRating(productId);
- 
+
     res.status(201).json({ success: true, message: "Review submitted successfully!", review })
   }
   catch (error) {

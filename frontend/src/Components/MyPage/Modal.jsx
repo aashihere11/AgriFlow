@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import axios from "axios";
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Modal({ mode, isOpen, onClose, setForm, form, isFormValid, setFarmerProducts, setLoading }) {
+    const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
 
     const handleChange = (e) => {
         if (e.target.type === "file") {
@@ -67,7 +69,7 @@ function Modal({ mode, isOpen, onClose, setForm, form, isFormValid, setFarmerPro
         if (form.image && typeof form.image !== "string") {
             formData.append("image", form.image);
         }
-       
+
         try {
             const response = await axios.patch(`http://localhost:3000/product/edit/${form._id}`, formData, { withCredentials: true });
 
@@ -84,6 +86,32 @@ function Modal({ mode, isOpen, onClose, setForm, form, isFormValid, setFarmerPro
         } catch (error) {
             console.error("eroor in updation:", error);
             onClose();
+        }
+    };
+
+    const handleGenerateDescription = async () => {
+        if (!form.name?.trim() || !form.category) {
+            alert("Please enter a product name and select a category first.");
+            return;
+        }
+
+        try {
+            setIsGeneratingDescription(true);
+            const response = await axios.post("http://localhost:3000/generate-description",
+                { productName: form.name, category: form.category }, { withCredentials: true });
+
+            if (response.data.success) {
+                setForm((prev) => ({
+                    ...prev,
+                    description: response.data.description,
+                }));
+            }
+
+        } catch (error) {
+            console.error("Error:", error);
+            alert(error.response?.data?.message || "Unable to generate a description. Please try again.");
+        } finally {
+            setIsGeneratingDescription(false);
         }
     };
 
@@ -106,7 +134,21 @@ function Modal({ mode, isOpen, onClose, setForm, form, isFormValid, setFarmerPro
                         value={form.name} onChange={handleChange} />
                 </div>
                 <div className='flex flex-col gap-1 mb-3'>
-                    <label className="text-xs md:text-base text-gray-500">Desciption</label>
+                    <div className="flex items-center justify-between gap-3">
+                        <label className="text-xs md:text-base text-gray-500">Description</label>
+                        <button
+                            type="button"
+                            onClick={handleGenerateDescription}
+                            disabled={isGeneratingDescription || !form.name?.trim() || !form.category}
+                            className="rounded-lg bg-[#e7f5eb] px-2 py-1 text-xs font-medium text-[#1a5c2e] transition-colors hover:bg-[#ccebd5] disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            {isGeneratingDescription ? (
+                                <CircularProgress size="3rem" aria-label="Loading…" sx={{ color: "#165b07" }} />
+                            ) : (
+                                "Generate Description"
+                            )}
+                        </button>
+                    </div>
                     <textarea
                         name="description"
                         placeholder="Product description"
