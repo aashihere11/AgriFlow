@@ -19,7 +19,7 @@ const Order = require("./Models/Order.js");
 const crypto = require("crypto");
 const Withdraw = require("./Models/Withdraw.js");
 const Review = require("./Models/Review.js");
-const { GoogleGenAI } = require('@google/genai');
+const { GoogleGenAI, Type } = require('@google/genai');
 
 dotenv.config();
 
@@ -73,6 +73,79 @@ async function generateDescription(productName, category) {
   return response.text;
 }
 
+async function analyzeProductImage(imageBuffer, mimeType, unit = "kg") {
+  const response = await ai.models.generateContent({
+    model: "gemini-3.5-flash-lite",
+    contents: [
+      {
+        inlineData: {
+          data: imageBuffer.toString("base64"),
+          mimeType,
+        },
+      },
+      `Analyze this farm product image for an Indian marketplace. Identify product name, category, freshness grade, 2-sentence description, and realistic price per ${unit} in INR as per todays market price.`,
+    ],
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          name: { type: Type.STRING },
+          category: {
+            type: Type.STRING,
+            enum: ["vegetables", "fruits", "grains", "dairy", "spices"],
+          },
+          freshnessGrade: {
+            type: Type.STRING,
+            enum: ["Grade A (Farm Fresh)", "Grade B (Standard)", "Needs Quick Sale"],
+          },
+          suggestedPrice: { type: Type.NUMBER },
+          priceRange: { type: Type.STRING },
+          priceReason: { type: Type.STRING },
+          description: { type: Type.STRING },
+        },
+        required: [
+          "name",
+          "category",
+          "freshnessGrade",
+          "suggestedPrice",
+          "priceRange",
+          "priceReason",
+          "description",
+        ],
+      },
+    },
+  });
+
+  return JSON.parse(response.text);
+}
+
+app.post("/analyze-product-image", authenticate, upload.single("image"), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "Product image is required.",
+        });
+      }
+
+      const unit = req.body.unit || "kg";
+      
+      const data = await analyzeProductImage(
+        req.file.buffer,
+        req.file.mimetype,
+        unit
+      );
+
+      return res.status(200).json({ success: true, data });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message || "Failed to analyze image.",
+      });
+    }
+  }
+);
 app.post("/generate-description", authenticate, async (req, res) => {
   try {
     const { productName, category } = req.body;
